@@ -107,8 +107,17 @@ function App() {
   const isValidated = Boolean(loggedUser);
   const [message, setMessage] = useState('');
   const pressTimer = useRef(null);
+  const usuarioLogado = loggedUser;
+  const saudacao =
+    usuarioLogado?.genero?.toLowerCase() === 'f' ? 'bem-vinda,' : 'bem-vindo,';
 
   function handleLogout() {
+    audioRef.current?.pause();
+
+    if (!window.confirm('Deseja realmente sair da conta?')) {
+      return;
+    }
+
     localStorage.removeItem('halloween_user');
     setLoggedUser(null);
   }
@@ -312,7 +321,7 @@ function App() {
             >
               <div className="halloween-me-tile__welcome">
                 <span className="halloween-me-tile__greeting">
-                  {loggedUser?.genero === 'F' ? 'bem-vinda,' : 'bem-vindo,'}
+                  {saudacao}
                 </span>
                 <span className="halloween-me-tile__name">
                   {(loggedUser?.nome || 'convidado').toLowerCase()}

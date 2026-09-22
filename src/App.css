@@ -74,6 +74,7 @@
   font-size: 20px;
   font-weight: 300;
   line-height: 1.2;
+  text-transform: lowercase;
 }
 
 .halloween-me-tile__name {
