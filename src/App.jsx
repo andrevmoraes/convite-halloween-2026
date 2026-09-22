@@ -106,6 +106,36 @@ function App() {
   const [loggedUser, setLoggedUser] = useState(() => readStoredUser());
   const isValidated = Boolean(loggedUser);
   const [message, setMessage] = useState('');
+  const pressTimer = useRef(null);
+
+  function handleLogout() {
+    localStorage.removeItem('halloween_user');
+    setLoggedUser(null);
+  }
+
+  function iniciarPressao() {
+    cancelarPressao();
+    pressTimer.current = setTimeout(() => {
+      handleLogout();
+      pressTimer.current = null;
+    }, 2000);
+  }
+
+  function cancelarPressao() {
+    if (pressTimer.current !== null) {
+      clearTimeout(pressTimer.current);
+      pressTimer.current = null;
+    }
+  }
+
+  useEffect(
+    () => () => {
+      if (pressTimer.current !== null) {
+        clearTimeout(pressTimer.current);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -270,7 +300,16 @@ function App() {
           transition={{ duration: 1.5, ease: 'easeOut' }}
         >
           <div className="halloween-hub__content">
-            <section className="halloween-me-tile" aria-label="Perfil do convidado">
+            <section
+              className="halloween-me-tile"
+              aria-label="Perfil do convidado"
+              onMouseDown={iniciarPressao}
+              onMouseUp={cancelarPressao}
+              onMouseLeave={cancelarPressao}
+              onTouchStart={iniciarPressao}
+              onTouchEnd={cancelarPressao}
+              onTouchCancel={cancelarPressao}
+            >
               <div className="halloween-me-tile__welcome">
                 <span className="halloween-me-tile__greeting">
                   {loggedUser?.genero === 'F' ? 'bem-vinda,' : 'bem-vindo,'}
