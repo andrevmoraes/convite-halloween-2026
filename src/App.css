@@ -1,0 +1,193 @@
+.app-message {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  left: 1rem;
+  z-index: 2;
+  margin: 0 auto;
+  max-width: 32rem;
+  padding: 0.75rem 1rem;
+  color: #f1f1ed;
+  background: rgba(12, 14, 14, 0.88);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.halloween-hub {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 100svh;
+  padding: 20px 20px 7rem;
+  color: #f1f1ed;
+  background: transparent;
+}
+
+.halloween-hub::before {
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background-image: url('/midia/imagens/annie-spratt-7CME6Wlgrdk-unsplash.jpg');
+  background-position: center;
+  background-size: cover;
+  content: '';
+  pointer-events: none;
+}
+
+.halloween-hub__content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: min(100%, 42rem);
+  margin: 0 auto;
+  text-align: left;
+}
+
+.halloween-me-tile {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-height: 150px;
+}
+
+.halloween-me-tile__welcome {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 12px;
+  color: #f1f1ed;
+  background: var(--accent-color);
+  text-align: left;
+}
+
+.halloween-me-tile__greeting {
+  margin: 0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.halloween-me-tile__name {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.halloween-me-tile__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.halloween-player {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  display: flex;
+  min-height: 4.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid #333;
+  background: #000;
+}
+
+.halloween-player--hidden {
+  visibility: hidden;
+}
+
+.halloween-player__track-info {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.halloween-player__cover {
+  width: 3.25rem;
+  height: 3.25rem;
+  flex: 0 0 3.25rem;
+  object-fit: cover;
+}
+
+.halloween-player__title,
+.halloween-player__artist {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.halloween-player__title {
+  color: #f1f1ed;
+  font-size: 0.9rem;
+}
+
+.halloween-player__artist {
+  margin-top: 0.25rem;
+  color: #bcbdb8;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.halloween-player__controls {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.4rem;
+}
+
+.halloween-player__button {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  place-items: center;
+  color: #f1f1ed;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.halloween-player__button:hover {
+  background: #222;
+}
+
+.halloween-player__button:active {
+  color: #111;
+  background: #fff;
+}
+
+.halloween-player__button:focus-visible {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
+@media (max-width: 32rem) {
+  .halloween-player {
+    padding: 0.75rem;
+  }
+
+  .halloween-player__track-info {
+    max-width: 55vw;
+  }
+
+  .halloween-player__title {
+    font-size: 0.75rem;
+  }
+}

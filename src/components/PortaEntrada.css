@@ -1,0 +1,146 @@
+.porta-entrada {
+  position: relative;
+  display: grid;
+  min-height: 100svh;
+  overflow: hidden;
+  place-items: center;
+  color: #f1f1ed;
+  background: #111;
+  font-family: Arial, Helvetica, sans-serif;
+  isolation: isolate;
+}
+
+.porta-entrada__background,
+.porta-entrada__shade {
+  position: absolute;
+  inset: 0;
+}
+
+.porta-entrada__background {
+  z-index: -2;
+  background-position: center;
+  background-size: cover;
+  transform-origin: center;
+}
+
+.porta-entrada__shade {
+  z-index: -1;
+  background: rgba(7, 8, 8, 0.35);
+  pointer-events: none;
+}
+
+.porta-entrada--open .porta-entrada__shade {
+  background: rgba(7, 8, 8, 0.62);
+}
+
+.porta-entrada__enter {
+  border: 0;
+  padding: 1rem;
+  color: #fff;
+  background: transparent;
+  font: inherit;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  animation: porta-entrada-pulse 2s ease-in-out infinite;
+}
+
+.porta-entrada__enter:focus-visible,
+.porta-entrada__key:focus-visible {
+  outline: 3px solid #f2c94c;
+  outline-offset: 4px;
+}
+
+.porta-entrada__panel {
+  display: grid;
+  width: min(90vw, 24rem);
+  gap: 1rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  background: rgba(12, 14, 14, 0.78);
+}
+
+.porta-entrada__eyebrow {
+  margin: 0;
+  color: #bcbdb8;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.porta-entrada__display {
+  min-height: 2.5rem;
+  color: #fff;
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  letter-spacing: 0.22em;
+  text-align: center;
+}
+
+.porta-entrada__keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.4rem;
+}
+
+.porta-entrada__key {
+  display: grid;
+  min-height: 4rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0;
+  place-items: center;
+  color: #f1f1ed;
+  background: rgba(30, 34, 34, 0.92);
+  font: inherit;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.porta-entrada__key:hover {
+  background: #394040;
+}
+
+.porta-entrada__key:active {
+  color: #111;
+  background: #f2c94c;
+  transform: translateY(2px);
+}
+
+.porta-entrada__key:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.porta-entrada__key--utility,
+.porta-entrada__key--confirm {
+  padding: 0.5rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.porta-entrada__key--utility {
+  background: rgba(63, 42, 42, 0.94);
+}
+
+.porta-entrada__key--confirm {
+  background: rgba(42, 63, 55, 0.94);
+}
+
+@keyframes porta-entrada-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 24rem) {
+  .porta-entrada__key {
+    min-height: 3.5rem;
+  }
+}
