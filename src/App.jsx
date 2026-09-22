@@ -1,16 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { VscChevronRight, VscDebugPause, VscPlay } from 'react-icons/vsc';
+import ConvidadosView from './components/ConvidadosView';
 import PortaEntrada from './components/PortaEntrada';
 import VotacaoData from './components/VotacaoData';
+import {
+  formatarCaminhoImagem,
+  PLACEHOLDER_PROFILE,
+} from './lib/formatarCaminhoImagem';
 import { supabase } from './lib/supabase';
 import './App.css';
 
 const PLACEHOLDER_COVER =
   '/midia/imagens/sabina-music-rich-OJy0JHnoUZQ-unsplash.jpg';
-const PLACEHOLDER_PROFILE =
-  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"%3E%3Crect width="400" height="400" fill="%23666666"/%3E%3Ccircle cx="200" cy="145" r="72" fill="%23bdbdbd"/%3E%3Cpath d="M80 370c18-88 72-130 120-130s102 42 120 130" fill="%23bdbdbd"/%3E%3C/svg%3E';
-
 function readStoredUser() {
   const storedUser = localStorage.getItem('halloween_user');
 
@@ -104,6 +106,7 @@ function App() {
   const [currentTrack, setCurrentTrack] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [loggedUser, setLoggedUser] = useState(() => readStoredUser());
+  const [telaAtual, setTelaAtual] = useState('inicio');
   const isValidated = Boolean(loggedUser);
   const [message, setMessage] = useState('');
   const pressTimer = useRef(null);
@@ -285,17 +288,6 @@ function App() {
     return userData;
   }
 
-  function formatarCaminhoImagem(caminho) {
-    if (!caminho || typeof caminho !== 'string') {
-      return PLACEHOLDER_PROFILE;
-    }
-
-    let caminhoFormatado = caminho.trim().replace(/\\/g, '/');
-    caminhoFormatado = caminhoFormatado.replace(/^public\//i, '');
-
-    return `/${caminhoFormatado.replace(/^\/+/, '')}`;
-  }
-
   return (
     <>
       {!isValidated && (
@@ -309,38 +301,48 @@ function App() {
           transition={{ duration: 1.5, ease: 'easeOut' }}
         >
           <div className="halloween-hub__content">
-            <section
-              className="halloween-me-tile"
-              aria-label="Perfil do convidado"
-              onMouseDown={iniciarPressao}
-              onMouseUp={cancelarPressao}
-              onMouseLeave={cancelarPressao}
-              onTouchStart={iniciarPressao}
-              onTouchEnd={cancelarPressao}
-              onTouchCancel={cancelarPressao}
-            >
-              <div className="halloween-me-tile__welcome">
-                <span className="halloween-me-tile__greeting">
-                  {saudacao}
-                </span>
-                <span className="halloween-me-tile__name">
-                  {(loggedUser?.nome || 'convidado').toLowerCase()}
-                </span>
-              </div>
-              <img
-                className="halloween-me-tile__photo"
-                src={formatarCaminhoImagem(loggedUser?.foto_url)}
-                alt={loggedUser?.nome ? `Foto de ${loggedUser.nome}` : 'Foto do convidado'}
-                onError={(event) => {
-                  event.currentTarget.onerror = null;
-                  event.currentTarget.src = PLACEHOLDER_PROFILE;
-                }}
+            {telaAtual === 'convidados' ? (
+              <ConvidadosView
+                anfitriao={loggedUser}
+                onBack={() => setTelaAtual('inicio')}
               />
-            </section>
-            <VotacaoData
-              usuarioLogado={loggedUser}
-              onUserUpdate={setLoggedUser}
-            />
+            ) : (
+              <>
+                <section
+                  className="halloween-me-tile"
+                  aria-label="Perfil do convidado"
+                  onMouseDown={iniciarPressao}
+                  onMouseUp={cancelarPressao}
+                  onMouseLeave={cancelarPressao}
+                  onTouchStart={iniciarPressao}
+                  onTouchEnd={cancelarPressao}
+                  onTouchCancel={cancelarPressao}
+                >
+                  <div className="halloween-me-tile__welcome">
+                    <span className="halloween-me-tile__greeting">
+                      {saudacao}
+                    </span>
+                    <span className="halloween-me-tile__name">
+                      {(loggedUser?.nome || 'convidado').toLowerCase()}
+                    </span>
+                  </div>
+                  <img
+                    className="halloween-me-tile__photo"
+                    src={formatarCaminhoImagem(loggedUser?.foto_url)}
+                    alt={loggedUser?.nome ? `Foto de ${loggedUser.nome}` : 'Foto do convidado'}
+                    onError={(event) => {
+                      event.currentTarget.onerror = null;
+                      event.currentTarget.src = PLACEHOLDER_PROFILE;
+                    }}
+                  />
+                </section>
+                <VotacaoData
+                  usuarioLogado={loggedUser}
+                  onUserUpdate={setLoggedUser}
+                  onOpenGuests={() => setTelaAtual('convidados')}
+                />
+              </>
+            )}
           </div>
         </motion.main>
       )}

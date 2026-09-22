@@ -80,7 +80,11 @@ function serializeVotes(voteIds) {
   return voteIds.join(',');
 }
 
-export default function VotacaoData({ usuarioLogado, onUserUpdate }) {
+export default function VotacaoData({
+  usuarioLogado,
+  onUserUpdate,
+  onOpenGuests,
+}) {
   const [user, setUser] = useState(usuarioLogado);
   const [guests, setGuests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -131,6 +135,14 @@ export default function VotacaoData({ usuarioLogado, onUserUpdate }) {
   const absentGuests = useMemo(
     () => guests.filter((guest) => isAbsent(guest.data_votada)),
     [guests],
+  );
+  const absentGuestNames = useMemo(
+    () =>
+      absentGuests
+        .map((guest) => guest.nome)
+        .filter(Boolean)
+        .map((name) => name.toLowerCase()),
+    [absentGuests],
   );
 
   const loadVotes = useCallback(async () => {
@@ -309,7 +321,9 @@ export default function VotacaoData({ usuarioLogado, onUserUpdate }) {
           }`}
         >
           <button
-            className="votacao-data__absence-button"
+            className={`votacao-data__absence-button${
+              userIsAbsent ? ' votacao-data__absence-button--selected' : ''
+            }`}
             type="button"
             onClick={handleDecline}
             disabled={savingVote || isLoading}
@@ -318,15 +332,19 @@ export default function VotacaoData({ usuarioLogado, onUserUpdate }) {
             não vou poder ir
           </button>
           <p className="votacao-data__absence-summary">
-            {absentGuests.length > 0
-              ? `Não poderão comparecer: ${absentGuests
-                  .map((guest) => guest.nome)
-                  .filter(Boolean)
-                  .join(', ')}`
-              : 'Ainda não há confirmações de ausência.'}
+            {absentGuestNames.length > 0
+              ? `não vão: ${absentGuestNames.join(', ')}`
+              : 'ninguém ainda'}
           </p>
         </div>
       </div>
+      <button
+        className="votacao-data__guests-tile"
+        type="button"
+        onClick={onOpenGuests}
+      >
+        convidados
+      </button>
 
       {errorMessage && (
         <p className="votacao-data__error" role="alert">
