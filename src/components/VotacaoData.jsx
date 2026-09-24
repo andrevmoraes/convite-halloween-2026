@@ -3,11 +3,10 @@ import { supabase } from '../lib/supabase';
 import './VotacaoData.css';
 
 const OPCOES_DATA = [
-  { id: 1, texto: '03 de outubro - eleições' },
-  { id: 2, texto: '10 de outubro' },
-  { id: 3, texto: '17 de outubro' },
-  { id: 4, texto: '24 de outubro - eleições' },
-  { id: 5, texto: '31 de outubro 🎃' },
+  { id: 1, texto: '17 ou 31, vou em qualquer uma' },
+  { id: 2, texto: 'só consigo dia 17' },
+  { id: 3, texto: 'só consigo dia 31 🎃' },
+  { id: 4, texto: 'não vou conseguir ir' },
 ];
 
 function normalizeVotes(value) {
@@ -53,28 +52,7 @@ function normalizeVotes(value) {
   return Number.isInteger(numericValue) ? [numericValue] : [];
 }
 
-function isAbsent(value) {
-  if (Array.isArray(value)) {
-    return value.includes('ausente');
-  }
 
-  if (typeof value === 'string') {
-    const trimmedValue = value.trim();
-
-    if (trimmedValue === 'ausente') {
-      return true;
-    }
-
-    try {
-      const parsedValue = JSON.parse(trimmedValue);
-      return Array.isArray(parsedValue) && parsedValue.includes('ausente');
-    } catch {
-      return trimmedValue.split(',').some((item) => item.trim() === 'ausente');
-    }
-  }
-
-  return false;
-}
 
 function serializeVotes(voteIds) {
   return voteIds.join(',');
@@ -83,7 +61,6 @@ function serializeVotes(voteIds) {
 export default function VotacaoData({
   usuarioLogado,
   onUserUpdate,
-  onOpenGuests,
 }) {
   const [user, setUser] = useState(usuarioLogado);
   const [guests, setGuests] = useState([]);
@@ -102,7 +79,6 @@ export default function VotacaoData({
   }, [usuarioLogado]);
 
   const selectedVotes = useMemo(() => normalizeVotes(user?.data_votada), [user]);
-  const userIsAbsent = useMemo(() => isAbsent(user?.data_votada), [user]);
 
   const voteResults = useMemo(() => {
     const results = {};
@@ -132,18 +108,6 @@ export default function VotacaoData({
       ),
     [guests],
   );
-  const absentGuests = useMemo(
-    () => guests.filter((guest) => isAbsent(guest.data_votada)),
-    [guests],
-  );
-  const absentGuestNames = useMemo(
-    () =>
-      absentGuests
-        .map((guest) => guest.nome)
-        .filter(Boolean)
-        .map((name) => name.toLowerCase()),
-    [absentGuests],
-  );
 
   const loadVotes = useCallback(async () => {
     const { data, error } = await supabase
@@ -166,10 +130,10 @@ export default function VotacaoData({
     const pendingVote = pendingVoteRef.current;
     const guestsWithOptimisticVote = pendingVote
       ? nextGuests.map((guest) =>
-          guest.id === pendingVote.userId
-            ? { ...guest, data_votada: pendingVote.serializedVotes }
-            : guest,
-        )
+        guest.id === pendingVote.userId
+          ? { ...guest, data_votada: pendingVote.serializedVotes }
+          : guest,
+      )
       : nextGuests;
 
     setGuests(guestsWithOptimisticVote);
@@ -237,32 +201,11 @@ export default function VotacaoData({
 
     const previousVotes = normalizeVotes(user.data_votada);
     const nextVotes = previousVotes.includes(dateId)
-      ? previousVotes.filter((voteId) => voteId !== dateId)
-      : [...previousVotes, dateId];
+      ? []
+      : [dateId];
     const serializedVotes = serializeVotes(nextVotes);
 
-    if (dateId === 1) {
-      if (!audioRef.current) {
-        audioRef.current = new Audio('/midia/sons/mean_girls.mp3');
-      }
-
-      if (audioRef.current.paused) {
-        audioRef.current.play().catch((error) => console.warn(error));
-      }
-    }
-
     const previousGuests = guests;
-    await saveSelection(serializedVotes, previousGuests);
-  };
-
-  const handleDecline = async () => {
-    if (!user?.id || savingVote) {
-      return;
-    }
-
-    const previousGuests = guests;
-    const serializedVotes = userIsAbsent ? serializeVotes([]) : 'ausente';
-
     await saveSelection(serializedVotes, previousGuests);
   };
 
@@ -273,8 +216,7 @@ export default function VotacaoData({
           escolha a data
         </h2>
         <p className="votacao-data__subtitle">
-          atenção: os domingos 04 e 25 de outubro são dias de eleição. selecione
-          uma ou mais datas que funcionam para você.
+          estamos definindo a data entre 17 e 31 de outubro. vote na opção que funciona para você.
         </p>
 
         {OPCOES_DATA.map((date) => {
@@ -285,9 +227,8 @@ export default function VotacaoData({
 
           return (
             <button
-              className={`votacao-data__tile${
-                isSelected ? ' votacao-data__tile--selected' : ''
-              }`}
+              className={`votacao-data__tile${isSelected ? ' votacao-data__tile--selected' : ''
+                }${isSelected && date.id === 4 ? ' votacao-data__tile--red' : ''}`}
               key={date.id}
               type="button"
               onClick={() => handleVote(date.id)}
@@ -315,36 +256,7 @@ export default function VotacaoData({
             </button>
           );
         })}
-        <div
-          className={`votacao-data__absence${
-            userIsAbsent ? ' votacao-data__absence--selected' : ''
-          }`}
-        >
-          <button
-            className={`votacao-data__absence-button${
-              userIsAbsent ? ' votacao-data__absence-button--selected' : ''
-            }`}
-            type="button"
-            onClick={handleDecline}
-            disabled={savingVote || isLoading}
-            aria-pressed={userIsAbsent}
-          >
-            não vou poder ir
-          </button>
-          <p className="votacao-data__absence-summary">
-            {absentGuestNames.length > 0
-              ? `não vão: ${absentGuestNames.join(', ')}`
-              : 'ninguém ainda'}
-          </p>
-        </div>
       </div>
-      <button
-        className="votacao-data__guests-tile"
-        type="button"
-        onClick={onOpenGuests}
-      >
-        convidados
-      </button>
 
       {errorMessage && (
         <p className="votacao-data__error" role="alert">

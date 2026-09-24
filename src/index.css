@@ -1,38 +1,45 @@
 :root {
   --accent-color: #F06000;
   /* --accent-color: #E51400; */
-  font-family: 'Segoe UI', 'Segoe WP', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: "Segoe UI", "Segoe WP", system-ui, -apple-system, sans-serif;
   color: #f1f1ed;
-  background-image: url('/midia/imagens/annie-spratt-7CME6Wlgrdk-unsplash.jpg');
-  background-position: center;
-  background-attachment: fixed;
-  background-size: cover;
+  background-color: #0c0e0e;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
 }
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html,
-body,
-#root {
+body {
   min-width: 320px;
   min-height: 100%;
   margin: 0;
-  touch-action: manipulation;
-  overscroll-behavior: none;
 }
 
-body {
-  min-height: 100svh;
-  background-image: inherit;
-  background-position: inherit;
-  background-attachment: inherit;
-  background-size: inherit;
+body::before {
+  content: '';
+  position: fixed;
+  z-index: -10;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh;
+  background-image: url('/midia/imagens/annie-spratt-7CME6Wlgrdk-unsplash.jpg');
+  background-position: center;
+  background-size: cover;
+  pointer-events: none;
+}
+
+#root {
+  min-height: 100%;
 }
 
 button {

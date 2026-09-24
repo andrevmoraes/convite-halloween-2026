@@ -2,7 +2,7 @@
   display: flex;
   width: 100%;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   margin: 0;
   text-align: left;
   background: transparent;
@@ -15,15 +15,18 @@
   padding: 0;
   color: #f1f1ed;
   background: transparent;
-  font-size: clamp(1.7rem, 5vw, 3rem);
-  font-weight: 300;
-  line-height: 1;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: clamp(1.8rem, 5.5vw, 2.8rem);
+  font-weight: 200;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
 }
 
 .votacao-data__subtitle {
-  margin: 0 0 24px;
+  margin: 0 0 16px;
   color: #aaaaaa;
-  font-size: 0.875rem;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 0.9rem;
   font-weight: 300;
   line-height: 1.4;
 }
@@ -32,19 +35,20 @@
   display: flex;
   width: 100%;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .votacao-data__grid.voting-tile {
   min-height: 0;
-  padding: 24px;
-  background-color: rgba(0, 0, 0, 0.7);
+  padding: clamp(16px, 4vw, 24px);
+  background-color: rgba(0, 0, 0, 0.72);
+  border-radius: 0;
 }
 
 .votacao-data__tile {
   display: flex;
   width: 100%;
-  min-height: 0;
+  min-height: 48px;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
@@ -55,6 +59,7 @@
   background: transparent;
   cursor: pointer;
   text-align: left;
+  touch-action: manipulation;
   transition: all 0.2s ease;
 }
 
@@ -70,6 +75,10 @@
 
 .votacao-data__tile--selected strong {
   color: var(--accent-color);
+}
+
+.votacao-data__tile--selected.votacao-data__tile--red strong {
+  color: #E51400;
 }
 
 .votacao-data__tile:focus-visible {
@@ -132,63 +141,7 @@
   line-height: 1.4;
 }
 
-.votacao-data__absence {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 10px 0;
-  color: #f1f1ed;
-  background-color: transparent;
-  border-radius: 0;
-  transition: all 0.2s ease;
-}
 
-.votacao-data__absence:active {
-  transform: scale(0.98);
-  opacity: 0.7;
-  transition: transform 0.1s ease, opacity 0.1s ease;
-}
-
-.votacao-data__absence-button {
-  width: 100%;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  color: inherit;
-  background: transparent;
-  cursor: pointer;
-  font: inherit;
-  text-align: left;
-}
-
-.votacao-data__absence-button:focus-visible {
-  color: #fff;
-}
-
-.votacao-data__absence-button--selected {
-  color: #E51400;
-  background: transparent;
-}
-
-.votacao-data__absence--selected {
-  background: transparent;
-}
-
-.votacao-data__absence-button:focus-visible {
-  outline: 3px solid #f1f1ed;
-  outline-offset: 2px;
-}
-
-.votacao-data__absence-button:disabled {
-  cursor: wait;
-}
-
-.votacao-data__absence-summary {
-  margin: 0;
-  color: #aaaaaa;
-  font-size: 12px;
-  line-height: 1.4;
-}
 
 .votacao-data__guests-tile {
   display: flex;

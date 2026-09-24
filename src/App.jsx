@@ -49,7 +49,8 @@ function HalloweenPlayer({
   const track = playlist[currentTrack];
 
   return (
-    <div className={`halloween-player${isVisible ? '' : ' halloween-player--hidden'}`}>
+    <>
+      <div className={`halloween-player${isVisible ? '' : ' halloween-player--hidden'}`}>
       <div className="halloween-player__track-info">
         <img
           className="halloween-player__cover"
@@ -85,6 +86,7 @@ function HalloweenPlayer({
       </div>
       <audio ref={audioRef} src={track.src} />
     </div>
+    </>
   );
 }
 
@@ -159,7 +161,7 @@ function App() {
     window.OneSignalDeferred = window.OneSignalDeferred || [];
     window.OneSignalDeferred.push(async function (OneSignal) {
       try {
-        await OneSignal.Notifications.promptPush();
+        await OneSignal.Slidedown.promptPush();
       } catch (error) {
         console.warn('Não foi possível solicitar notificações:', error);
       }
@@ -373,34 +375,62 @@ function App() {
           animate={{ opacity: 1 }}
           transition={{ duration: 1.5, ease: 'easeOut' }}
         >
-          <div className="halloween-hub__content">
-            {telaAtual === 'convidados' ? (
+          {telaAtual === 'convidados' ? (
+            <div className="halloween-hub__content">
               <ConvidadosView
                 anfitriao={loggedUser}
                 onBack={() => setTelaAtual('inicio')}
               />
-            ) : (
-              <>
-                <section
-                  className="halloween-me-tile"
-                  aria-label="Perfil do convidado"
-                  onMouseDown={iniciarPressao}
-                  onMouseUp={cancelarPressao}
-                  onMouseLeave={cancelarPressao}
-                  onTouchStart={iniciarPressao}
-                  onTouchEnd={cancelarPressao}
-                  onTouchCancel={cancelarPressao}
+            </div>
+          ) : (
+            <div className="metro-start-grid">
+              {/* Tile 1: Notificações (2 colunas de largura, 2 unidades de altura - Lado Esquerdo) */}
+              <div className="onesignal-customlink-container onesignal-tile-wrapper">
+                <button
+                  className="metro-tile tile-small-2x2"
+                  type="button"
+                  onClick={solicitarNotificacoes}
                 >
-                  <div className="halloween-me-tile__welcome">
-                    <span className="halloween-me-tile__greeting">
-                      {saudacao}
-                    </span>
-                    <span className="halloween-me-tile__name">
-                      {(loggedUser?.nome || 'convidado').toLowerCase()}
-                    </span>
+                  <div className="tile-icon">
+                    <svg
+                      width="38"
+                      height="38"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.35"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+                      <path d="M10 21h4" />
+                    </svg>
                   </div>
+                  <span className="tile-label">ativar notificações</span>
+                </button>
+              </div>
+
+              {/* Tile 2: Me Tile (4 colunas de largura, 2 unidades de altura - Lado Direito) */}
+              <section
+                className="metro-tile tile-me"
+                aria-label="Perfil do convidado"
+                onMouseDown={iniciarPressao}
+                onMouseUp={cancelarPressao}
+                onMouseLeave={cancelarPressao}
+                onTouchStart={iniciarPressao}
+                onTouchEnd={cancelarPressao}
+                onTouchCancel={cancelarPressao}
+              >
+                <div className="tile-me__welcome">
+                  <span className="tile-me__greeting">{saudacao}</span>
+                  <span className="tile-me__name">
+                    {(loggedUser?.nome || 'convidado').toLowerCase()}
+                  </span>
+                </div>
+                <div className="tile-me__photo-container">
                   <img
-                    className="halloween-me-tile__photo"
+                    className="tile-me__photo"
                     src={formatarCaminhoImagem(loggedUser?.foto_url)}
                     alt={loggedUser?.nome ? `Foto de ${loggedUser.nome}` : 'Foto do convidado'}
                     onError={(event) => {
@@ -408,88 +438,97 @@ function App() {
                       event.currentTarget.src = PLACEHOLDER_PROFILE;
                     }}
                   />
-                </section>
-                <div className="metro-actions-bar">
-                  <div className="onesignal-customlink-container metro-action-item">
-                    <button
-                      className="metro-action-btn"
-                      type="button"
-                      onClick={solicitarNotificacoes}
-                      aria-label="Ativar notificações"
-                    >
-                      <div className="metro-action-circle" aria-hidden="true">
-                        <svg
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="square"
-                        >
-                          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
-                          <path d="M10 21h4" />
-                        </svg>
-                      </div>
-                      <span className="metro-action-label">notificações</span>
-                    </button>
-                  </div>
-                  <button
-                    className="metro-action-btn"
-                    type="button"
-                    onClick={handleCopiarEndereco}
-                    aria-label="Copiar endereço"
-                  >
-                    <div className="metro-action-circle" aria-hidden="true">
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="square"
-                      >
-                        <rect x="9" y="9" width="13" height="13" />
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                      </svg>
-                    </div>
-                    <span className="metro-action-label">
-                      {copiado ? 'copiado!' : 'copiar endereço'}
-                    </span>
-                  </button>
-                  <a
-                    className="metro-action-btn"
-                    href={linkMapa}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir no mapa"
-                  >
-                    <div className="metro-action-circle" aria-hidden="true">
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="square"
-                      >
-                        <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" />
-                        <circle cx="12" cy="10" r="3" />
-                      </svg>
-                    </div>
-                    <span className="metro-action-label">abrir mapa</span>
-                  </a>
                 </div>
+              </section>
+
+              {/* Card Escolha a Data: 6 colunas de largura */}
+              <div className="tile-votacao-wrapper">
                 <VotacaoData
                   usuarioLogado={loggedUser}
                   onUserUpdate={setLoggedUser}
-                  onOpenGuests={() => setTelaAtual('convidados')}
                 />
-              </>
-            )}
-          </div>
+              </div>
+
+              {/* Tile Convidados: 6 colunas de largura, 1 unidade de altura */}
+              <button
+                className="metro-tile tile-wide-full"
+                type="button"
+                onClick={() => setTelaAtual('convidados')}
+              >
+                <span className="tile-label">convidados</span>
+              </button>
+
+              {/* Tile Small 1: WhatsApp (2 colunas) */}
+              <a
+                className="metro-tile tile-small-2x2"
+                href="https://chat.whatsapp.com/BDC19peviuB0GBOlRKlDoh?s=cl&p=i&mlu=4&ilr=4"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="tile-icon">
+                  <img
+                    src="https://img.icons8.com/windows/96/whatsapp--v1.png"
+                    alt="WhatsApp"
+                    width="42"
+                    height="42"
+                    className="tile-icon-img"
+                  />
+                </div>
+                <span className="tile-label">entrar no grupo</span>
+              </a>
+
+              {/* Tile Small 2: Copiar Endereço (2 colunas) */}
+              <button
+                className="metro-tile tile-small-2x2"
+                type="button"
+                onClick={handleCopiarEndereco}
+              >
+                <div className="tile-icon">
+                  <svg
+                    width="38"
+                    height="38"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.35"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="9" y="9" width="13" height="13" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                </div>
+                <span className="tile-label">{copiado ? 'copiado!' : 'copiar endereço'}</span>
+              </button>
+
+              {/* Tile Small 3: Abrir Mapa (2 colunas) */}
+              <a
+                className="metro-tile tile-small-2x2"
+                href={linkMapa}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="tile-icon">
+                  <svg
+                    width="38"
+                    height="38"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.35"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </div>
+                <span className="tile-label">abrir mapa</span>
+              </a>
+            </div>
+          )}
         </motion.main>
       )}
       {!isValidated && message && <p className="app-message">{message}</p>}
