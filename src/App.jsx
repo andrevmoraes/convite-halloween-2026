@@ -116,6 +116,7 @@ function App() {
   const [telaAtual, setTelaAtual] = useState('inicio');
   const isValidated = Boolean(loggedUser);
   const [message, setMessage] = useState('');
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const [copiado, setCopiado] = useState(false);
   const copiadoTimer = useRef(null);
   const isApple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
@@ -137,10 +138,16 @@ function App() {
       try {
         await OneSignal.init({
           appId: '104f574c-394d-4361-828d-f7d85d65c45a',
+          safari_web_id: 'web.onesignal.auto.3b8b9214-66ac-44d1-a7fb-a9dc856242cb',
           notifyButton: {
             enable: false,
           },
           allowLocalhostAsSecureOrigin: true,
+        });
+
+        setIsSubscribed(OneSignal.User.PushSubscription.optedIn);
+        OneSignal.User.PushSubscription.addEventListener('change', (event) => {
+          setIsSubscribed(event.current.optedIn);
         });
       } catch (error) {
         console.warn(
@@ -161,9 +168,14 @@ function App() {
     window.OneSignalDeferred = window.OneSignalDeferred || [];
     window.OneSignalDeferred.push(async function (OneSignal) {
       try {
-        await OneSignal.Slidedown.promptPush();
+        if (isSubscribed) {
+          await OneSignal.User.PushSubscription.optOut();
+        } else {
+          await OneSignal.Notifications.requestPermission();
+          await OneSignal.User.PushSubscription.optIn();
+        }
       } catch (error) {
-        console.warn('Não foi possível solicitar notificações:', error);
+        console.warn('Não foi possível solicitar/alterar notificações:', error);
       }
     });
   }
@@ -407,7 +419,7 @@ function App() {
                       <path d="M10 21h4" />
                     </svg>
                   </div>
-                  <span className="tile-label">ativar notificações</span>
+                  <span className="tile-label">{isSubscribed ? 'desativar notificações' : 'ativar notificações'}</span>
                 </button>
               </div>
 
