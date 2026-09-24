@@ -164,20 +164,28 @@ function App() {
     }
   }, []);
 
-  function solicitarNotificacoes() {
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    window.OneSignalDeferred.push(async function (OneSignal) {
-      try {
-        if (isSubscribed) {
-          await OneSignal.User.PushSubscription.optOut();
-        } else {
-          await OneSignal.Notifications.requestPermission();
-          await OneSignal.User.PushSubscription.optIn();
+  async function solicitarNotificacoes() {
+    try {
+      if (!window.OneSignal) return;
+      
+      if (isSubscribed) {
+        await window.OneSignal.User.PushSubscription.optOut();
+      } else {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+        if (isIOS && !isStandalone) {
+          alert('🍎 Para ativar as notificações no iPhone, você precisa adicionar este convite à sua Tela de Início!\n\n1. Clique no botão de Compartilhar (quadrado com setinha) na barra do Safari.\n2. Escolha "Adicionar à Tela de Início".\n3. Abra o App pela tela inicial e tente novamente.');
+          return;
         }
-      } catch (error) {
-        console.warn('Não foi possível solicitar/alterar notificações:', error);
+
+        // Must be called directly in the click handler for iOS Safari
+        await window.OneSignal.Notifications.requestPermission();
+        await window.OneSignal.User.PushSubscription.optIn();
       }
-    });
+    } catch (error) {
+      console.warn('Não foi possível solicitar/alterar notificações:', error);
+    }
   }
 
   async function handleCopiarEndereco() {

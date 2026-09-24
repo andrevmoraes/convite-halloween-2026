@@ -8,6 +8,8 @@
   background: #111;
   font-family: Arial, Helvetica, sans-serif;
   isolation: isolate;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .porta-entrada__background,
