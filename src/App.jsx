@@ -13,6 +13,9 @@ import './App.css';
 
 const PLACEHOLDER_COVER =
   '/midia/imagens/sabina-music-rich-OJy0JHnoUZQ-unsplash.jpg';
+const ENDERECO_EVENTO =
+  'Av. Coronel João Leite, 300 - Centro, Mogi Mirim - SP, 13800-034';
+
 function readStoredUser() {
   const storedUser = localStorage.getItem('halloween_user');
 
@@ -86,6 +89,8 @@ function HalloweenPlayer({
 }
 
 function App() {
+  const onesignalIniciado = useRef(false);
+
   const audioRef = useRef(null);
   const hasStartedRef = useRef(false);
   const loadedTrackRef = useRef(null);
@@ -109,6 +114,74 @@ function App() {
   const [telaAtual, setTelaAtual] = useState('inicio');
   const isValidated = Boolean(loggedUser);
   const [message, setMessage] = useState('');
+  const [copiado, setCopiado] = useState(false);
+  const copiadoTimer = useRef(null);
+  const isApple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
+  const localRef =
+    'Condomínio Edifício Samambaia I II - R. Cel. João Leite, 300 - Centro, Mogi Mirim - SP, 13800-034';
+  const queryEncoded = encodeURIComponent(localRef);
+  const linkMapa = isApple
+    ? `https://maps.apple.com/?q=${queryEncoded}`
+    : `https://www.google.com/maps/search/?api=1&query=${queryEncoded}`;
+
+  useEffect(() => {
+    if (!isValidated || onesignalIniciado.current) {
+      return;
+    }
+
+    onesignalIniciado.current = true;
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(async function (OneSignal) {
+      try {
+        await OneSignal.init({
+          appId: '104f574c-394d-4361-828d-f7d85d65c45a',
+          notifyButton: {
+            enable: false,
+          },
+          allowLocalhostAsSecureOrigin: true,
+        });
+      } catch (error) {
+        console.warn(
+          'OneSignal já inicializado ou aviso ignorado:',
+          error,
+        );
+      }
+    });
+  }, [isValidated]);
+
+  useEffect(() => () => {
+    if (copiadoTimer.current !== null) {
+      clearTimeout(copiadoTimer.current);
+    }
+  }, []);
+
+  function solicitarNotificacoes() {
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(async function (OneSignal) {
+      try {
+        await OneSignal.Notifications.promptPush();
+      } catch (error) {
+        console.warn('Não foi possível solicitar notificações:', error);
+      }
+    });
+  }
+
+  async function handleCopiarEndereco() {
+    try {
+      await navigator.clipboard.writeText(ENDERECO_EVENTO);
+      setCopiado(true);
+      if (copiadoTimer.current !== null) {
+        clearTimeout(copiadoTimer.current);
+      }
+      copiadoTimer.current = setTimeout(() => {
+        setCopiado(false);
+        copiadoTimer.current = null;
+      }, 2000);
+    } catch (error) {
+      console.warn('Não foi possível copiar o endereço:', error);
+    }
+  }
+
   const pressTimer = useRef(null);
   const usuarioLogado = loggedUser;
   const saudacao =
@@ -336,6 +409,79 @@ function App() {
                     }}
                   />
                 </section>
+                <div className="metro-actions-bar">
+                  <div className="onesignal-customlink-container metro-action-item">
+                    <button
+                      className="metro-action-btn"
+                      type="button"
+                      onClick={solicitarNotificacoes}
+                      aria-label="Ativar notificações"
+                    >
+                      <div className="metro-action-circle" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="square"
+                        >
+                          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+                          <path d="M10 21h4" />
+                        </svg>
+                      </div>
+                      <span className="metro-action-label">notificações</span>
+                    </button>
+                  </div>
+                  <button
+                    className="metro-action-btn"
+                    type="button"
+                    onClick={handleCopiarEndereco}
+                    aria-label="Copiar endereço"
+                  >
+                    <div className="metro-action-circle" aria-hidden="true">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="square"
+                      >
+                        <rect x="9" y="9" width="13" height="13" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                      </svg>
+                    </div>
+                    <span className="metro-action-label">
+                      {copiado ? 'copiado!' : 'copiar endereço'}
+                    </span>
+                  </button>
+                  <a
+                    className="metro-action-btn"
+                    href={linkMapa}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Abrir no mapa"
+                  >
+                    <div className="metro-action-circle" aria-hidden="true">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="square"
+                      >
+                        <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                    </div>
+                    <span className="metro-action-label">abrir mapa</span>
+                  </a>
+                </div>
                 <VotacaoData
                   usuarioLogado={loggedUser}
                   onUserUpdate={setLoggedUser}
