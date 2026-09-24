@@ -409,7 +409,7 @@ function App() {
                 <button
                   className="metro-tile tile-small-2x2"
                   type="button"
-                  onClick={solicitarNotificacoes}
+                  disabled={true}
                 >
                   <div className="tile-icon">
                     <svg
@@ -427,7 +427,7 @@ function App() {
                       <path d="M10 21h4" />
                     </svg>
                   </div>
-                  <span className="tile-label">{isSubscribed ? 'desativar notificações' : 'ativar notificações'}</span>
+                  <span className="tile-label">em breve</span>
                 </button>
               </div>
 
