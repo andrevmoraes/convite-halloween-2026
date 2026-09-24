@@ -112,6 +112,10 @@
   font-size: 1.125rem;
   font-weight: 300;
   line-height: 1.2;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .convidados-view__back {
@@ -310,4 +314,96 @@
 .convidados-view__form-actions button:disabled {
   cursor: wait;
   opacity: 0.55;
+}
+
+.convidados-view__photo-upload-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.convidados-view__photo-upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid #fff;
+  border-radius: 0;
+  cursor: pointer;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.convidados-view__photo-upload-label:focus-within {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
+.convidados-view__photo-upload-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.convidados-view__photo-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.convidados-view__photo-upload-icon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8px;
+  fill: currentColor;
+}
+
+.convidados-view__photo-upload-text {
+  font-family: 'Segoe UI', 'Segoe WP', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+  text-transform: lowercase;
+}
+
+.metro-vote-badge {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0 !important;
+  padding: 4px 8px;
+  font-family: "Segoe UI", 'Segoe WP', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: lowercase;
+  color: rgba(255, 255, 255, 0.85);
+  margin-left: auto;
+  white-space: nowrap;
+  align-self: center;
+}
+
+.metro-vote-badge.highlight {
+  border-color: #FF5300;
+  color: #FF5300;
+}
+
+.metro-empty-state {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: lowercase;
+  padding: 24px 0;
+  text-align: left;
 }

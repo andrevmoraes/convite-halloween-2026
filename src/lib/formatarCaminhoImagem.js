@@ -6,6 +6,10 @@ export function formatarCaminhoImagem(caminho) {
     return PLACEHOLDER_PROFILE;
   }
 
+  if (caminho.startsWith('http://') || caminho.startsWith('https://')) {
+    return caminho;
+  }
+
   let caminhoFormatado = caminho.trim().replace(/\\/g, '/');
   caminhoFormatado = caminhoFormatado.replace(/^public\//i, '');
 

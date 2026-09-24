@@ -1,0 +1,223 @@
+.editar-perfil-view {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 42rem);
+  margin: 0 auto;
+  color: #fff;
+  font-family: 'Segoe UI', 'Segoe WP', sans-serif;
+  padding: 1.25rem 1.25rem 7rem;
+}
+
+.editar-perfil-view__header h1 {
+  margin: 0 0 32px;
+  color: #fff;
+  font-size: clamp(3rem, 12vw, 4rem);
+  font-weight: 200;
+  letter-spacing: -0.08em;
+  line-height: 0.95;
+}
+
+.editar-perfil-view__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.editar-perfil-view__photo-container {
+  display: flex;
+  margin-bottom: 1.5rem;
+}
+
+.editar-perfil-view__photo-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid #fff;
+  border-radius: 0;
+  cursor: pointer;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.editar-perfil-view__photo-label:focus-within {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
+.editar-perfil-view__photo-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.editar-perfil-view__photo-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.editar-perfil-view__photo-icon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8px;
+  fill: currentColor;
+}
+
+.editar-perfil-view__photo-text {
+  font-size: 0.85rem;
+  font-weight: 300;
+  text-transform: lowercase;
+}
+
+.editar-perfil-view__form label,
+.editar-perfil-view__form legend {
+  color: #aaa;
+  font-size: 0.85rem;
+  font-weight: 300;
+  text-transform: lowercase;
+}
+
+.editar-perfil-view__form input {
+  width: 100%;
+  margin-bottom: 0.75rem;
+  padding: 0.65rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0;
+  color: #fff;
+  background: #000;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+.editar-perfil-view__form input:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.editar-perfil-view__form fieldset {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  border: 0;
+}
+
+.editar-perfil-view__form legend {
+  margin-bottom: 0.5rem;
+}
+
+.editar-perfil-view__gender-options {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.editar-perfil-view__gender {
+  width: 3rem;
+  height: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 0;
+  color: #fff;
+  background: #000;
+  cursor: pointer;
+  font: inherit;
+  font-size: 1rem;
+  text-transform: lowercase;
+}
+
+.editar-perfil-view__gender--selected {
+  color: #fff;
+  background: var(--accent-color);
+  border-color: #fff;
+}
+
+.editar-perfil-view__gender:focus-visible,
+.editar-perfil-view__actions button:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
+.editar-perfil-view__error {
+  margin: 0.25rem 0 0.5rem;
+  color: #ffb3aa;
+  font-size: 0.85rem;
+}
+
+.editar-perfil-view__actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.editar-perfil-view__actions button {
+  min-width: 6rem;
+  padding: 0.7rem 1rem;
+  border: 0;
+  border-radius: 0;
+  color: #000;
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 300;
+  text-transform: lowercase;
+}
+
+.editar-perfil-view__actions button + button {
+  color: #fff;
+  background: #333;
+}
+
+.editar-perfil-view__actions button:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.editar-perfil-view__logout {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.editar-perfil-view__btn-logout {
+  width: auto;
+  padding: 0.6rem 1rem;
+  border: 2px solid #555;
+  border-radius: 0;
+  color: #ccc;
+  background: transparent;
+  cursor: pointer;
+  font-family: 'Segoe UI', 'Segoe WP', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  text-transform: lowercase;
+  box-shadow: none;
+  transition: transform 0.1s ease, background-color 0.1s ease, color 0.1s ease, border-color 0.1s ease;
+}
+
+.editar-perfil-view__btn-logout:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border-color: #777;
+}
+
+.editar-perfil-view__btn-logout:active {
+  transform: scale(0.95);
+}
+
+.editar-perfil-view__btn-logout:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
+}

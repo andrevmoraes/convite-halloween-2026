@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { VscChevronRight, VscDebugPause, VscPlay } from 'react-icons/vsc';
 import ConvidadosView from './components/ConvidadosView';
+import EditarPerfil from './components/EditarPerfil';
 import PortaEntrada from './components/PortaEntrada';
 import VotacaoData from './components/VotacaoData';
 import {
@@ -204,7 +205,6 @@ function App() {
     }
   }
 
-  const pressTimer = useRef(null);
   const usuarioLogado = loggedUser;
   const saudacao =
     usuarioLogado?.genero?.toLowerCase() === 'f' ? 'bem-vinda,' : 'bem-vindo,';
@@ -218,31 +218,8 @@ function App() {
 
     localStorage.removeItem('halloween_user');
     setLoggedUser(null);
+    setTelaAtual('inicio');
   }
-
-  function iniciarPressao() {
-    cancelarPressao();
-    pressTimer.current = setTimeout(() => {
-      handleLogout();
-      pressTimer.current = null;
-    }, 2000);
-  }
-
-  function cancelarPressao() {
-    if (pressTimer.current !== null) {
-      clearTimeout(pressTimer.current);
-      pressTimer.current = null;
-    }
-  }
-
-  useEffect(
-    () => () => {
-      if (pressTimer.current !== null) {
-        clearTimeout(pressTimer.current);
-      }
-    },
-    [],
-  );
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -402,6 +379,18 @@ function App() {
                 onBack={() => setTelaAtual('inicio')}
               />
             </div>
+          ) : telaAtual === 'editar_perfil' ? (
+            <div className="halloween-hub__content">
+              <EditarPerfil
+                usuarioLogado={loggedUser}
+                onUserUpdate={(userData) => {
+                  setLoggedUser(userData);
+                  localStorage.setItem('halloween_user', JSON.stringify(userData));
+                }}
+                onBack={() => setTelaAtual('inicio')}
+                onLogout={handleLogout}
+              />
+            </div>
           ) : (
             <div className="metro-start-grid">
               {/* Tile 1: Notificações (2 colunas de largura, 2 unidades de altura - Lado Esquerdo) */}
@@ -435,12 +424,8 @@ function App() {
               <section
                 className="metro-tile tile-me"
                 aria-label="Perfil do convidado"
-                onMouseDown={iniciarPressao}
-                onMouseUp={cancelarPressao}
-                onMouseLeave={cancelarPressao}
-                onTouchStart={iniciarPressao}
-                onTouchEnd={cancelarPressao}
-                onTouchCancel={cancelarPressao}
+                onClick={() => setTelaAtual('editar_perfil')}
+                style={{ cursor: 'pointer' }}
               >
                 <div className="tile-me__welcome">
                   <span className="tile-me__greeting">{saudacao}</span>

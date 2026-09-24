@@ -33,6 +33,34 @@ const turnstileVariants = {
   },
 };
 
+function getVoteText(value) {
+  if (value === null || value === undefined || value === '') return null;
+  
+  let votes = [];
+  if (Array.isArray(value)) {
+    votes = value.map(Number);
+  } else if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (!trimmed) return null;
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) votes = parsed.map(Number);
+      else votes = trimmed.split(',').map(item => Number(item.trim()));
+    } catch {
+      votes = trimmed.split(',').map(item => Number(item.trim()));
+    }
+  } else {
+    votes = [Number(value)];
+  }
+  
+  if (votes.includes(1)) return 'ambas';
+  if (votes.includes(2)) return 'dia 17';
+  if (votes.includes(3)) return 'dia 31';
+  if (votes.includes(4)) return 'não vai';
+  
+  return null;
+}
+
 export default function ConvidadosView({ anfitriao, onBack }) {
   const [guests, setGuests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -45,6 +73,8 @@ export default function ConvidadosView({ anfitriao, onBack }) {
     genero: '',
     telefone: '',
   });
+  const [fotoArquivo, setFotoArquivo] = useState(null);
+  const [fotoPreview, setFotoPreview] = useState(null);
 
   const normalizedHostName = (anfitriao?.nome || '')
     .normalize('NFD')
@@ -72,6 +102,8 @@ export default function ConvidadosView({ anfitriao, onBack }) {
     }
 
     setFormError('');
+    setFotoArquivo(null);
+    setFotoPreview(null);
     setIsFormOpen(false);
   }
 
@@ -81,6 +113,14 @@ export default function ConvidadosView({ anfitriao, onBack }) {
       ...currentData,
       [name]: value,
     }));
+  }
+
+  function handleFotoChange(event) {
+    const file = event.target.files[0];
+    if (file) {
+      setFotoArquivo(file);
+      setFotoPreview(URL.createObjectURL(file));
+    }
   }
 
   function handleGenderChange(genero) {
@@ -126,12 +166,40 @@ export default function ConvidadosView({ anfitriao, onBack }) {
         return;
       }
 
+      if (fotoArquivo) {
+        const fileExt = fotoArquivo.name.split('.').pop();
+        const fileName = `${data.id}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(fileName, fotoArquivo, { upsert: true });
+
+        if (uploadError) {
+          console.error('Erro ao fazer upload da foto:', uploadError);
+        } else {
+          const { data: publicUrlData } = supabase.storage
+            .from('avatars')
+            .getPublicUrl(fileName);
+
+          const fotoUrlFinal = `${publicUrlData.publicUrl}?t=${Date.now()}`;
+          
+          await supabase
+            .from('convidados')
+            .update({ foto_url: fotoUrlFinal })
+            .eq('id', data.id);
+            
+          data.foto_url = fotoUrlFinal;
+        }
+      }
+
       setGuests((currentGuests) =>
         [...currentGuests, data].sort((firstGuest, secondGuest) =>
           (firstGuest.nome || '').localeCompare(secondGuest.nome || '', 'pt-BR'),
         ),
       );
       setFormData({ nome: '', genero: '', telefone: '' });
+      setFotoArquivo(null);
+      setFotoPreview(null);
       setIsFormOpen(false);
     } catch (error) {
       console.error('Erro inesperado ao cadastrar o convidado.', error);
@@ -187,6 +255,11 @@ export default function ConvidadosView({ anfitriao, onBack }) {
     };
   }, []);
 
+  const confirmedGuests = guests.filter((guest) => {
+    const voteText = getVoteText(guest.data_votada);
+    return voteText && voteText !== 'não vai';
+  });
+
   return (
     <motion.section
       className="convidados-view"
@@ -233,28 +306,40 @@ export default function ConvidadosView({ anfitriao, onBack }) {
                 convidado para o maior evento do ano."
               </p>
             </motion.div>
-            <motion.div className="convidados-view__list" variants={panoramaVariants}>
-              {guests.map((guest) => (
-                <motion.div
-                  className="convidados-view__person"
-                  key={guest.id}
-                  variants={turnstileVariants}
-                >
-                  <img
-                    className="convidados-view__photo"
-                    src={formatarCaminhoImagem(guest.foto_url)}
-                    alt={`Foto de ${guest.nome || 'convidado'}`}
-                    onError={(event) => {
-                      event.currentTarget.onerror = null;
-                      event.currentTarget.src = PLACEHOLDER_PROFILE;
-                    }}
-                  />
-                  <span className="convidados-view__name">
-                    {(guest.nome || 'convidado').toLowerCase()}
-                  </span>
-                </motion.div>
-              ))}
-            </motion.div>
+            {confirmedGuests.length > 0 ? (
+              <motion.div className="convidados-view__list" variants={panoramaVariants}>
+                {confirmedGuests.map((guest) => {
+                  const voteText = getVoteText(guest.data_votada);
+                  return (
+                    <motion.div
+                      className="convidados-view__person"
+                      key={guest.id}
+                      variants={turnstileVariants}
+                    >
+                      <img
+                        className="convidados-view__photo"
+                        src={formatarCaminhoImagem(guest.foto_url)}
+                        alt={`Foto de ${guest.nome || 'convidado'}`}
+                        onError={(event) => {
+                          event.currentTarget.onerror = null;
+                          event.currentTarget.src = PLACEHOLDER_PROFILE;
+                        }}
+                      />
+                      <span className="convidados-view__name">
+                        {(guest.nome || 'convidado').toLowerCase()}
+                      </span>
+                      {voteText && (
+                        <span className={`metro-vote-badge ${voteText !== 'não vai' ? 'highlight' : ''}`}>
+                          {voteText}
+                        </span>
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            ) : (
+              <div className="metro-empty-state">nenhum convidado confirmado ainda.</div>
+            )}
             <motion.button
               className="convidados-view__back"
               type="button"
@@ -299,6 +384,28 @@ export default function ConvidadosView({ anfitriao, onBack }) {
               >
                 <h2 id="novo-convidado-title">novo convidado</h2>
                 <form onSubmit={handleSubmit}>
+                  <div className="convidados-view__photo-upload-container">
+                    <label className="convidados-view__photo-upload-label">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="convidados-view__photo-upload-input"
+                        onChange={handleFotoChange}
+                      />
+                      {fotoPreview ? (
+                        <img src={fotoPreview} alt="Preview" className="convidados-view__photo-preview" />
+                      ) : (
+                        <>
+                          <svg className="convidados-view__photo-upload-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/>
+                            <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                          </svg>
+                          <span className="convidados-view__photo-upload-text">adicionar foto</span>
+                        </>
+                      )}
+                    </label>
+                  </div>
+
                   <label htmlFor="guest-name">nome</label>
                   <input
                     id="guest-name"
