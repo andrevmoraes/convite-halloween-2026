@@ -93,7 +93,6 @@ function HalloweenPlayer({
 }
 
 function App() {
-  const onesignalIniciado = useRef(false);
 
   const audioRef = useRef(null);
   const hasStartedRef = useRef(false);
@@ -118,7 +117,6 @@ function App() {
   const [telaAtual, setTelaAtual] = useState('inicio');
   const isValidated = Boolean(loggedUser);
   const [message, setMessage] = useState('');
-  const [isSubscribed, setIsSubscribed] = useState(false);
   const [copiado, setCopiado] = useState(false);
   const copiadoTimer = useRef(null);
   const isApple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
@@ -129,38 +127,6 @@ function App() {
     ? `https://maps.apple.com/?q=${queryEncoded}`
     : `https://www.google.com/maps/search/?api=1&query=${queryEncoded}`;
 
-  useEffect(() => {
-    if (!isValidated || onesignalIniciado.current) {
-      return;
-    }
-
-    onesignalIniciado.current = true;
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    window.OneSignalDeferred.push(async function (OneSignal) {
-      try {
-        await OneSignal.init({
-          appId: '104f574c-394d-4361-828d-f7d85d65c45a',
-          safari_web_id: 'web.onesignal.auto.3b8b9214-66ac-44d1-a7fb-a9dc856242cb',
-          notifyButton: {
-            enable: false,
-          },
-          allowLocalhostAsSecureOrigin: true,
-        });
-
-        setIsSubscribed(OneSignal.User.PushSubscription.optedIn);
-        OneSignal.User.PushSubscription.addEventListener('change', (event) => {
-          setIsSubscribed(event.current.optedIn);
-        });
-
-        vincularDadosOneSignal(loggedUser);
-      } catch (error) {
-        console.warn(
-          'OneSignal já inicializado ou aviso ignorado:',
-          error,
-        );
-      }
-    });
-  }, [isValidated]);
 
   useEffect(() => () => {
     if (copiadoTimer.current !== null) {
@@ -168,64 +134,6 @@ function App() {
     }
   }, []);
 
-  async function vincularDadosOneSignal(user) {
-    if (!window.OneSignal || !user || !user.nome || !user.id) return;
-
-    try {
-      const externalId = `${user.nome.replace(/\s+/g, '').toLowerCase()}-${user.id}`;
-      await window.OneSignal.login(externalId);
-
-      if (user.telefone) {
-        let numeros = user.telefone.replace(/\D/g, '');
-        if (numeros) {
-          if (!numeros.startsWith('55') && (numeros.length === 10 || numeros.length === 11)) {
-            numeros = `55${numeros}`;
-          }
-          await window.OneSignal.User.addSms(`+${numeros}`);
-        }
-      }
-
-      await window.OneSignal.User.addTags({
-        nome: user.nome,
-        telefone: user.telefone || '',
-        id_supabase: user.id,
-      });
-    } catch (error) {
-      console.warn('Erro ao vincular dados ao OneSignal:', error);
-    }
-  }
-
-  async function solicitarNotificacoes() {
-    try {
-      if (!window.OneSignal) return;
-
-      if (isSubscribed) {
-        await window.OneSignal.User.PushSubscription.optOut();
-      } else {
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-
-        if (isIOS && !isStandalone) {
-          alert('Para receber notificações no iPhone, você precisa primeiro tocar em Compartilhar e depois em Adicionar à Tela de Início.');
-          return;
-        }
-
-        if (window.Notification && window.Notification.permission === 'denied') {
-          alert('As notificações estão bloqueadas no seu navegador. Você precisa ir nas configurações do site para permitir.');
-          return;
-        }
-
-        // Lembrete: verificar se os arquivos OneSignalSDKWorker.js estão estritamente dentro da pasta public/ do projeto Vite.
-        // Must be called directly in the click handler for iOS Safari
-        await window.OneSignal.Notifications.requestPermission();
-        await window.OneSignal.User.PushSubscription.optIn();
-        await vincularDadosOneSignal(loggedUser);
-      }
-    } catch (error) {
-      console.warn('Não foi possível solicitar/alterar notificações:', error);
-      alert('Não foi possível ativar as notificações. Verifique se o seu navegador não está bloqueando os alertas para este site.');
-    }
-  }
 
   async function handleCopiarEndereco() {
     try {
@@ -430,32 +338,24 @@ function App() {
             </div>
           ) : (
             <div className="metro-start-grid">
-              {/* Tile 1: Notificações (2 colunas de largura, 2 unidades de altura - Lado Esquerdo) */}
-              <div className="onesignal-customlink-container onesignal-tile-wrapper">
-                <button
-                  className="metro-tile tile-small-2x2"
-                  type="button"
-                  onClick={solicitarNotificacoes}
-                >
-                  <div className="tile-icon">
-                    <svg
-                      width="38"
-                      height="38"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.35"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
-                      <path d="M10 21h4" />
-                    </svg>
-                  </div>
-                  <span className="tile-label">{isSubscribed ? 'desativar notificações' : 'ativar notificações'}</span>
-                </button>
-              </div>
+              {/* Tile 1: WhatsApp (2 colunas de largura, 2 unidades de altura - Lado Esquerdo) */}
+              <a
+                className="metro-tile tile-small-2x2"
+                href="https://chat.whatsapp.com/BDC19peviuB0GBOlRKlDoh?s=cl&p=i&mlu=4&ilr=4"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="tile-icon">
+                  <img
+                    src="https://img.icons8.com/windows/96/whatsapp--v1.png"
+                    alt="WhatsApp"
+                    width="42"
+                    height="42"
+                    className="tile-icon-img"
+                  />
+                </div>
+                <span className="tile-label">entrar no grupo</span>
+              </a>
 
               {/* Tile 2: Me Tile (4 colunas de largura, 2 unidades de altura - Lado Direito) */}
               <section
@@ -503,23 +403,27 @@ function App() {
                 <span className="tile-label">confirmados e seus pratos</span>
               </button>
 
-              {/* Tile Small 1: WhatsApp (2 colunas) */}
+              {/* Tile Small 1: Fotos do ano passado (2 colunas) */}
               <a
                 className="metro-tile tile-small-2x2"
-                href="https://chat.whatsapp.com/BDC19peviuB0GBOlRKlDoh?s=cl&p=i&mlu=4&ilr=4"
+                href="https://photos.app.goo.gl/wFj9Z5LN3UyxQPuv5"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <div className="tile-icon">
-                  <img
-                    src="https://img.icons8.com/windows/96/whatsapp--v1.png"
-                    alt="WhatsApp"
+                <div className="tile-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
                     width="42"
                     height="42"
-                    className="tile-icon-img"
-                  />
+                    fill="currentColor"
+                    aria-hidden="true"
+                    style={{ display: 'block' }}
+                  >
+                    <path d="M 12.523438 0 C 11.692337 0 11 0.69233831 11 1.5234375 L 11 6.5605469 C 9.8291681 5.4286609 8.2493011 4.7148438 6.5 4.7148438 C 2.9215128 4.7148438 0 7.6373978 0 11.214844 L 0 11.476562 C 0 12.307663 0.69233831 13 1.5234375 13 L 6.5605469 13 C 5.4286609 14.170832 4.7148438 15.750699 4.7148438 17.5 C 4.7148438 21.078268 7.6365758 24 11.214844 24 L 11.476562 24 C 12.307663 24 13 23.307662 13 22.476562 L 13 17.439453 C 14.170832 18.571339 15.750699 19.285156 17.5 19.285156 C 21.078268 19.285156 24 16.363424 24 12.785156 L 24 12.523438 C 24 11.692337 23.307662 11 22.476562 11 L 17.439453 11 C 18.571339 9.8291681 19.285156 8.2493011 19.285156 6.5 C 19.285156 2.9215128 16.362602 0 12.785156 0 L 12.523438 0 z M 13 2.0429688 C 15.38969 2.1602393 17.285156 4.0788001 17.285156 6.5 C 17.285156 8.9214127 15.390696 10.839773 13 10.957031 L 13 2.0429688 z M 6.5 6.7148438 C 8.9214127 6.7148438 10.839773 8.6093044 10.957031 11 L 2.0429688 11 C 2.1602393 8.6103099 4.0788001 6.7148436 6.5 6.7148438 z M 13.042969 13 L 21.957031 13 C 21.839773 15.390696 19.921413 17.285156 17.5 17.285156 C 15.078587 17.285156 13.160227 15.390696 13.042969 13 z M 11 13.042969 L 11 21.957031 C 8.6093044 21.839773 6.7148436 19.921413 6.7148438 17.5 C 6.7148438 15.078587 8.6093044 13.160227 11 13.042969 z" />
+                  </svg>
                 </div>
-                <span className="tile-label">entrar no grupo</span>
+                <span className="tile-label">fotos do ano passado</span>
               </a>
 
               {/* Tile Small 2: Copiar Endereço (2 colunas) */}

@@ -1,7 +1,7 @@
 :root {
   --accent-color: #F06000;
   /* --accent-color: #E51400; */
-  font-family: "Segoe UI", "Segoe WP", system-ui, -apple-system, sans-serif;
+  font-family: 'Segoe UI', 'Segoe WP', -apple-system, system-ui, sans-serif;
   color: #f1f1ed;
   background-color: #0c0e0e;
   font-synthesis: none;
@@ -24,6 +24,7 @@ body {
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
+  font-family: 'Segoe UI', 'Segoe WP', -apple-system, system-ui, sans-serif;
 }
 
 input,
@@ -53,4 +54,12 @@ body::before {
 
 button {
   font: inherit;
+}
+
+input,
+textarea,
+button,
+select,
+a {
+  font-family: inherit;
 }

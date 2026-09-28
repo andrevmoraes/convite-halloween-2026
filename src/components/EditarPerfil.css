@@ -6,14 +6,12 @@
   background-color: rgba(0, 0, 0, 0.72);
   border-radius: 0;
   color: #f1f1ed;
-  font-family: 'Segoe UI', 'Segoe WP', system-ui, sans-serif;
   padding: clamp(16px, 4vw, 24px) clamp(16px, 4vw, 24px) 7rem clamp(16px, 4vw, 24px);
 }
 
 .editar-perfil-view__header h1 {
   margin: 0 0 32px;
   color: #f1f1ed;
-  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
   font-size: clamp(1.8rem, 5.5vw, 2.8rem);
   font-weight: 200;
   letter-spacing: -0.04em;
@@ -102,7 +100,6 @@
   border-radius: 0;
   color: #fff;
   background: rgba(0, 0, 0, 0.5);
-  font-family: 'Segoe UI', 'Segoe WP', system-ui, sans-serif;
   font-size: 1rem;
   font-weight: 300;
 }
@@ -135,7 +132,6 @@
   color: #fff;
   background: rgba(0, 0, 0, 0.5);
   cursor: pointer;
-  font-family: 'Segoe UI', 'Segoe WP', system-ui, sans-serif;
   font-size: 1rem;
   text-transform: lowercase;
 }
@@ -172,7 +168,6 @@
   color: #000;
   background: #fff;
   cursor: pointer;
-  font-family: 'Segoe UI', 'Segoe WP', system-ui, sans-serif;
   font-size: 1.1rem;
   font-weight: 300;
   text-transform: lowercase;
@@ -202,7 +197,6 @@
   color: #ccc;
   background: transparent;
   cursor: pointer;
-  font-family: 'Segoe UI', 'Segoe WP', sans-serif;
   font-size: 0.9rem;
   font-weight: 300;
   text-transform: lowercase;
