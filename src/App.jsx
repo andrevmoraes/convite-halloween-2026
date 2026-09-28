@@ -151,6 +151,8 @@ function App() {
         OneSignal.User.PushSubscription.addEventListener('change', (event) => {
           setIsSubscribed(event.current.optedIn);
         });
+
+        vincularDadosOneSignal(loggedUser);
       } catch (error) {
         console.warn(
           'OneSignal já inicializado ou aviso ignorado:',
@@ -165,6 +167,33 @@ function App() {
       clearTimeout(copiadoTimer.current);
     }
   }, []);
+
+  async function vincularDadosOneSignal(user) {
+    if (!window.OneSignal || !user || !user.nome || !user.id) return;
+
+    try {
+      const externalId = `${user.nome.replace(/\s+/g, '').toLowerCase()}-${user.id}`;
+      await window.OneSignal.login(externalId);
+
+      if (user.telefone) {
+        let numeros = user.telefone.replace(/\D/g, '');
+        if (numeros) {
+          if (!numeros.startsWith('55') && (numeros.length === 10 || numeros.length === 11)) {
+            numeros = `55${numeros}`;
+          }
+          await window.OneSignal.User.addSms(`+${numeros}`);
+        }
+      }
+
+      await window.OneSignal.User.addTags({
+        nome: user.nome,
+        telefone: user.telefone || '',
+        id_supabase: user.id,
+      });
+    } catch (error) {
+      console.warn('Erro ao vincular dados ao OneSignal:', error);
+    }
+  }
 
   async function solicitarNotificacoes() {
     try {
@@ -190,6 +219,7 @@ function App() {
         // Must be called directly in the click handler for iOS Safari
         await window.OneSignal.Notifications.requestPermission();
         await window.OneSignal.User.PushSubscription.optIn();
+        await vincularDadosOneSignal(loggedUser);
       }
     } catch (error) {
       console.warn('Não foi possível solicitar/alterar notificações:', error);
@@ -423,7 +453,7 @@ function App() {
                       <path d="M10 21h4" />
                     </svg>
                   </div>
-                  <span className="tile-label">{isSubscribed ? 'desativar alertas' : 'ativar alertas'}</span>
+                  <span className="tile-label">{isSubscribed ? 'desativar notificações' : 'ativar notificações'}</span>
                 </button>
               </div>
 
