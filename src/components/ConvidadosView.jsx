@@ -33,30 +33,22 @@ const turnstileVariants = {
   },
 };
 
-function getVoteText(value) {
-  if (value === null || value === undefined || value === '') return null;
+function getBadgeData(value) {
+  if (!value) return null;
   
-  let votes = [];
-  if (Array.isArray(value)) {
-    votes = value.map(Number);
-  } else if (typeof value === 'string') {
-    const trimmed = value.trim();
-    if (!trimmed) return null;
-    try {
-      const parsed = JSON.parse(trimmed);
-      if (Array.isArray(parsed)) votes = parsed.map(Number);
-      else votes = trimmed.split(',').map(item => Number(item.trim()));
-    } catch {
-      votes = trimmed.split(',').map(item => Number(item.trim()));
+  try {
+    const parsed = JSON.parse(value);
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+      if (parsed.presenca === 'nao') return { text: 'não vai', type: 'nao-vai' };
+      if (parsed.presenca === 'sim') {
+        if (parsed.contribuicao === 'pix') return { text: 'PIX', type: 'pix' };
+        if (parsed.contribuicao === 'prato' && parsed.comida) return { text: parsed.comida.toLowerCase(), type: 'prato' };
+        return { text: 'confirmado', type: 'confirmado' };
+      }
     }
-  } else {
-    votes = [Number(value)];
+  } catch {
+    // Tratamento de Dados Legados
   }
-  
-  if (votes.includes(1)) return 'ambas';
-  if (votes.includes(2)) return 'dia 17';
-  if (votes.includes(3)) return 'dia 31';
-  if (votes.includes(4)) return 'não vai';
   
   return null;
 }
@@ -256,8 +248,16 @@ export default function ConvidadosView({ anfitriao, onBack }) {
   }, []);
 
   const confirmedGuests = guests.filter((guest) => {
-    const voteText = getVoteText(guest.data_votada);
-    return voteText && voteText !== 'não vai';
+    const normalizedName = (guest.nome || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    if (normalizedName.includes('andre')) return false;
+
+    const badge = getBadgeData(guest.data_votada);
+    return badge && badge.type !== 'nao-vai';
+  });
+
+  const absentGuests = guests.filter((guest) => {
+    const badge = getBadgeData(guest.data_votada);
+    return badge && badge.type === 'nao-vai';
   });
 
   return (
@@ -301,15 +301,20 @@ export default function ConvidadosView({ anfitriao, onBack }) {
                   event.currentTarget.src = PLACEHOLDER_PROFILE;
                 }}
               />
-              <p className="convidados-view__highlight-message">
-                "se você está nessa lista é porque eu gosto de você e você está
-                convidado para o maior evento do ano."
-              </p>
+              <div className="convidados-view__highlight-text">
+                <h2 className="convidados-view__highlight-name">
+                  {(andreGuest?.nome || 'andré moraes').toLowerCase()}
+                </h2>
+                <p className="convidados-view__highlight-message">
+                  "se você está nessa lista é porque eu gosto de você e você está
+                  convidado para o maior evento do ano."
+                </p>
+              </div>
             </motion.div>
             {confirmedGuests.length > 0 ? (
               <motion.div className="convidados-view__list" variants={panoramaVariants}>
                 {confirmedGuests.map((guest) => {
-                  const voteText = getVoteText(guest.data_votada);
+                  const badge = getBadgeData(guest.data_votada);
                   return (
                     <motion.div
                       className="convidados-view__person"
@@ -328,9 +333,9 @@ export default function ConvidadosView({ anfitriao, onBack }) {
                       <span className="convidados-view__name">
                         {(guest.nome || 'convidado').toLowerCase()}
                       </span>
-                      {voteText && (
-                        <span className={`metro-vote-badge ${voteText !== 'não vai' ? 'highlight' : ''}`}>
-                          {voteText}
+                      {badge && (
+                        <span className={`metro-vote-badge metro-vote-badge--${badge.type}`}>
+                          {badge.text}
                         </span>
                       )}
                     </motion.div>
@@ -340,6 +345,35 @@ export default function ConvidadosView({ anfitriao, onBack }) {
             ) : (
               <div className="metro-empty-state">nenhum convidado confirmado ainda.</div>
             )}
+
+            {absentGuests.length > 0 && (
+              <motion.div className="convidados-view__absent-section" variants={panoramaVariants}>
+                <h3 className="convidados-view__absent-title">não vão</h3>
+                <div className="convidados-view__list">
+                  {absentGuests.map((guest) => (
+                    <motion.div
+                      className="convidados-view__person convidados-view__person--absent"
+                      key={guest.id}
+                      variants={turnstileVariants}
+                    >
+                      <img
+                        className="convidados-view__photo"
+                        src={formatarCaminhoImagem(guest.foto_url)}
+                        alt={`Foto de ${guest.nome || 'convidado'}`}
+                        onError={(event) => {
+                          event.currentTarget.onerror = null;
+                          event.currentTarget.src = PLACEHOLDER_PROFILE;
+                        }}
+                      />
+                      <span className="convidados-view__name">
+                        {(guest.nome || 'convidado').toLowerCase()}
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
             <motion.button
               className="convidados-view__back"
               type="button"

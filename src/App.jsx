@@ -5,6 +5,7 @@ import ConvidadosView from './components/ConvidadosView';
 import EditarPerfil from './components/EditarPerfil';
 import PortaEntrada from './components/PortaEntrada';
 import VotacaoData from './components/VotacaoData';
+import DataEventoTile from './components/DataEventoTile';
 import {
   formatarCaminhoImagem,
   PLACEHOLDER_PROFILE,
@@ -52,41 +53,41 @@ function HalloweenPlayer({
   return (
     <>
       <div className={`halloween-player${isVisible ? '' : ' halloween-player--hidden'}`}>
-      <div className="halloween-player__track-info">
-        <img
-          className="halloween-player__cover"
-          src={track.capa || PLACEHOLDER_COVER}
-          alt={`Capa de ${track.titulo}`}
-          onError={(event) => {
-            event.currentTarget.onerror = null;
-            event.currentTarget.src = PLACEHOLDER_COVER;
-          }}
-        />
-        <div>
-          <strong className="halloween-player__title">{track.titulo}</strong>
-          <span className="halloween-player__artist">{track.artista}</span>
+        <div className="halloween-player__track-info">
+          <img
+            className="halloween-player__cover"
+            src={track.capa || PLACEHOLDER_COVER}
+            alt={`Capa de ${track.titulo}`}
+            onError={(event) => {
+              event.currentTarget.onerror = null;
+              event.currentTarget.src = PLACEHOLDER_COVER;
+            }}
+          />
+          <div>
+            <strong className="halloween-player__title">{track.titulo}</strong>
+            <span className="halloween-player__artist">{track.artista}</span>
+          </div>
         </div>
+        <div className="halloween-player__controls">
+          <button
+            className="halloween-player__button"
+            type="button"
+            onClick={onTogglePlayback}
+            aria-label={isPlaying ? 'Pausar música' : 'Reproduzir música'}
+          >
+            {isPlaying ? <VscDebugPause /> : <VscPlay />}
+          </button>
+          <button
+            className="halloween-player__button"
+            type="button"
+            onClick={onNextTrack}
+            aria-label="Avançar música"
+          >
+            <VscChevronRight />
+          </button>
+        </div>
+        <audio ref={audioRef} src={track.src} />
       </div>
-      <div className="halloween-player__controls">
-        <button
-          className="halloween-player__button"
-          type="button"
-          onClick={onTogglePlayback}
-          aria-label={isPlaying ? 'Pausar música' : 'Reproduzir música'}
-        >
-          {isPlaying ? <VscDebugPause /> : <VscPlay />}
-        </button>
-        <button
-          className="halloween-player__button"
-          type="button"
-          onClick={onNextTrack}
-          aria-label="Avançar música"
-        >
-          <VscChevronRight />
-        </button>
-      </div>
-      <audio ref={audioRef} src={track.src} />
-    </div>
     </>
   );
 }
@@ -168,7 +169,7 @@ function App() {
   async function solicitarNotificacoes() {
     try {
       if (!window.OneSignal) return;
-      
+
       if (isSubscribed) {
         await window.OneSignal.User.PushSubscription.optOut();
       } else {
@@ -446,6 +447,9 @@ function App() {
                 </div>
               </section>
 
+              {/* Tile Evento ICS */}
+              <DataEventoTile />
+
               {/* Card Escolha a Data: 6 colunas de largura */}
               <div className="tile-votacao-wrapper">
                 <VotacaoData
@@ -460,7 +464,7 @@ function App() {
                 type="button"
                 onClick={() => setTelaAtual('convidados')}
               >
-                <span className="tile-label">convidados</span>
+                <span className="tile-label">confirmados e seus pratos</span>
               </button>
 
               {/* Tile Small 1: WhatsApp (2 colunas) */}

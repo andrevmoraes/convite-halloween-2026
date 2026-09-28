@@ -1,4 +1,12 @@
-.votacao-data {
+/* Suggestion: To avoid the pull-to-refresh effect on mobile devices, 
+   add the following to your global stylesheet (e.g., index.css or App.css):
+   
+   html, body {
+     overscroll-behavior-y: none;
+   }
+*/
+
+.rsvp-container {
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -8,178 +16,191 @@
   background: transparent;
 }
 
-.votacao-data__title-tile {
+.rsvp-grid {
+  min-height: 0;
+  padding: clamp(16px, 4vw, 24px);
+  background-color: rgba(0, 0, 0, 0.72);
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rsvp-title {
   margin: 0;
   padding: 0;
   color: #f1f1ed;
-  background: transparent;
   font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
   font-size: clamp(1.8rem, 5.5vw, 2.8rem);
   font-weight: 200;
   letter-spacing: -0.04em;
   line-height: 1.05;
+  text-transform: lowercase;
 }
 
-.votacao-data__subtitle {
-  margin: 0 0 16px;
+.rsvp-subtitle {
+  margin: 0;
+  color: #aaaaaa;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.rsvp-subtitle strong {
+  color: #fff;
+  font-weight: 400;
+}
+
+.rsvp-disclaimer {
+  color: #aaaaaa;
+  font-size: 0.85rem;
+  display: block;
+}
+
+.rsvp-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rsvp-options--small {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.rsvp-tile {
+  display: flex;
+  width: 100%;
+  min-height: 60px;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 12px 16px;
+  border: 2px solid transparent;
+  border-radius: 0;
+  color: #f1f1ed;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 300;
+  text-transform: lowercase;
+  transition: all 0.2s ease;
+}
+
+.rsvp-tile--small {
+  flex: 1;
+  min-width: 140px;
+  min-height: 48px;
+  font-size: 1rem;
+}
+
+.rsvp-tile:focus-visible {
+  outline: 2px solid #f1f1ed;
+  outline-offset: 2px;
+}
+
+.rsvp-tile:active {
+  transform: scale(0.98);
+  opacity: 0.8;
+}
+
+.rsvp-tile--selected {
+  background: var(--accent-color);
+  border-color: #fff;
+  font-weight: 400;
+}
+
+.rsvp-tile--red.rsvp-tile--selected {
+  background: #E51400;
+}
+
+.rsvp-tile--action {
+  background: rgba(255, 255, 255, 0.15);
+  text-align: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+.rsvp-tile--action:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.rsvp-tile--link {
+  text-decoration: none;
+  display: flex;
+}
+
+.rsvp-expanded-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+}
+
+.rsvp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.rsvp-drink-notice {
+  color: #aaaaaa;
+  font-size: 0.9rem;
+  font-weight: 300;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.rsvp-pix-container {
+  margin-top: 4px;
+}
+
+.rsvp-field label {
   color: #aaaaaa;
   font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
   font-size: 0.9rem;
   font-weight: 300;
   line-height: 1.4;
+  text-transform: lowercase;
 }
 
-.votacao-data__grid {
-  display: flex;
+.rsvp-field textarea,
+.rsvp-field input {
   width: 100%;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.votacao-data__grid.voting-tile {
-  min-height: 0;
-  padding: clamp(16px, 4vw, 24px);
-  background-color: rgba(0, 0, 0, 0.72);
+  padding: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 0;
-}
-
-.votacao-data__tile {
-  display: flex;
-  width: 100%;
-  min-height: 48px;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 10px 0;
-  border: 0;
-  border-radius: 0;
-  color: #f1f1ed;
-  background: transparent;
-  cursor: pointer;
-  text-align: left;
-  touch-action: manipulation;
-  transition: all 0.2s ease;
-}
-
-.votacao-data__tile:focus-visible {
-  background: transparent;
-}
-
-.votacao-data__tile:active {
-  transform: scale(0.98);
-  opacity: 0.7;
-  transition: transform 0.1s ease, opacity 0.1s ease;
-}
-
-.votacao-data__tile--selected strong {
-  color: var(--accent-color);
-}
-
-.votacao-data__tile--selected.votacao-data__tile--red strong {
-  color: #E51400;
-}
-
-.votacao-data__tile:focus-visible {
-  outline: 3px solid #f1f1ed;
-  outline-offset: 2px;
-}
-
-.votacao-data__tile:disabled {
-  cursor: wait;
-}
-
-.votacao-data__tile-content {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-}
-
-.votacao-data__tile-meta {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  gap: 3px;
-  order: 1;
-}
-
-.votacao-data__tile strong {
-  order: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
   font-size: 1rem;
   font-weight: 300;
-  text-transform: lowercase;
+  resize: vertical;
 }
 
-.votacao-data__progress {
-  display: block;
-  min-width: 0;
-  height: 5px;
-  background: var(--accent-color);
-  transition: width 300ms ease;
+.rsvp-field textarea:focus,
+.rsvp-field input:focus {
+  outline: none;
+  border-color: var(--accent-color);
 }
 
-.votacao-data__progress-track {
-  display: block;
-  width: 100%;
-  height: 5px;
-  background: #222;
+.rsvp-field textarea:disabled,
+.rsvp-field input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.votacao-data__percentage {
-  font-size: 0.75rem;
-}
-
-.votacao-data__voters {
-  overflow: hidden;
-  color: #aaaaaa;
-  font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 1.4;
-}
-
-
-
-.votacao-data__guests-tile {
+.rsvp-status-area {
+  min-height: 24px;
   display: flex;
-  width: 100%;
-  min-height: 150px;
-  align-items: flex-end;
-  justify-content: flex-start;
-  padding: 12px;
-  border: 0;
-  border-radius: 0;
-  color: #fff;
-  background: var(--accent-color);
-  cursor: pointer;
-  font-size: 1.25rem;
-  font-weight: 300;
-  text-align: left;
-  text-transform: lowercase;
-  align-self: stretch;
-  transition: transform 120ms ease, opacity 120ms ease;
+  align-items: center;
+  margin-top: 8px;
 }
 
-.votacao-data__guests-tile:active {
-  transform: perspective(500px) rotateX(-6deg) scale(0.98);
-  opacity: 0.8;
-}
-
-.votacao-data__guests-tile:focus-visible {
-  outline: 3px solid #f1f1ed;
-  outline-offset: 2px;
-}
-
-.votacao-data__status,
-.votacao-data__error {
-  margin: 0;
-  color: #f1f1ed;
-  font-size: 0.8rem;
-}
-
-.votacao-data__error {
+.rsvp-error {
   color: #ffb3aa;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 0.9rem;
+  margin: 0;
 }

@@ -70,9 +70,24 @@
   border-radius: 0;
 }
 
-.convidados-view__highlight-message {
+.convidados-view__highlight-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   max-width: 28rem;
   align-self: flex-end;
+}
+
+.convidados-view__highlight-name {
+  margin: 0 0 4px;
+  color: var(--accent-color, #FF5300);
+  font-family: 'Segoe UI', 'Segoe WP', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.convidados-view__highlight-message {
   margin: 0;
   color: #fff;
   font-family: 'Segoe UI', 'Segoe WP', sans-serif;
@@ -116,6 +131,30 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.convidados-view__absent-section {
+  display: flex;
+  width: min(100%, 42rem);
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+.convidados-view__absent-title {
+  margin: 0 0 16px;
+  color: #aaaaaa;
+  font-family: 'Segoe UI', 'Segoe WP', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 300;
+  text-transform: lowercase;
+}
+
+.convidados-view__person--absent {
+  opacity: 0.45;
+}
+
+.convidados-view__person--absent .convidados-view__photo {
+  filter: grayscale(100%);
 }
 
 .convidados-view__back {
@@ -391,11 +430,25 @@
   margin-left: auto;
   white-space: nowrap;
   align-self: center;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.metro-vote-badge.highlight {
+.metro-vote-badge--confirmado {
   border-color: #FF5300;
   color: #FF5300;
+}
+
+.metro-vote-badge--pix {
+  background-color: #00aba9;
+  border-color: #00aba9;
+  color: #fff;
+}
+
+.metro-vote-badge--prato {
+  border-color: #f0a30a;
+  color: #f0a30a;
 }
 
 .metro-empty-state {

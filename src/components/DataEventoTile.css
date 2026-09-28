@@ -1,0 +1,62 @@
+.tile-data-evento {
+  grid-column: span 6; /* Ocupa 100% da largura no grid de 6 colunas */
+  padding: 16px 20px;
+  flex-direction: row !important; /* Força row contra o padrão do .metro-tile */
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 100px;
+}
+
+.tile-data-evento:active {
+  transform: scale(0.98) !important;
+}
+
+.data-evento-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 2px;
+  flex: 1; /* Pega todo espaço e empurra ícone */
+  min-width: 0; /* Permite truncar se necessário */
+}
+
+.data-evento-title {
+  font-size: 1.45rem; /* Um pouco menor para mobile */
+  font-weight: 300;
+  line-height: 1.1;
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+
+.data-evento-time {
+  font-size: 1.1rem;
+  font-weight: 400;
+  opacity: 0.95;
+  white-space: nowrap;
+}
+
+.data-evento-support {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  margin-top: 6px;
+  font-weight: 300;
+  white-space: nowrap;
+}
+
+.data-evento-icon {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  opacity: 0.9;
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+.data-evento-icon img {
+  filter: invert(1);
+  width: 48px; /* Menor como solicitado */
+  height: 48px;
+  object-fit: contain;
+}
