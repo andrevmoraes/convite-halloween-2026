@@ -162,26 +162,7 @@ export default function EditarPerfil({ usuarioLogado, onUserUpdate, onBack, onLo
             required
           />
 
-          <fieldset>
-            <legend>gênero</legend>
-            <div className="editar-perfil-view__gender-options">
-              {['m', 'f'].map((gender) => (
-                <button
-                  className={`editar-perfil-view__gender ${
-                    formData.genero === gender
-                      ? 'editar-perfil-view__gender--selected'
-                      : ''
-                  }`}
-                  key={gender}
-                  type="button"
-                  aria-pressed={formData.genero === gender}
-                  onClick={() => handleGenderChange(gender)}
-                >
-                  {gender}
-                </button>
-              ))}
-            </div>
-          </fieldset>
+
 
           <label htmlFor="perfil-telefone">telefone</label>
           <input

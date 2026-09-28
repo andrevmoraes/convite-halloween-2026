@@ -343,7 +343,7 @@ export default function ConvidadosView({ anfitriao, onBack }) {
                 })}
               </motion.div>
             ) : (
-              <div className="metro-empty-state">nenhum convidado confirmado ainda.</div>
+              <motion.div className="metro-empty-state" variants={turnstileVariants}>nenhum convidado confirmado ainda.</motion.div>
             )}
 
             {absentGuests.length > 0 && (

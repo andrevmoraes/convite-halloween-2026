@@ -80,10 +80,10 @@
 
 .convidados-view__highlight-name {
   margin: 0 0 4px;
-  color: var(--accent-color, #FF5300);
+  color: #fff;
   font-family: 'Segoe UI', 'Segoe WP', sans-serif;
-  font-size: 1.125rem;
-  font-weight: 400;
+  font-size: 1.5rem;
+  font-weight: 300;
   line-height: 1;
 }
 
@@ -459,4 +459,6 @@
   text-transform: lowercase;
   padding: 24px 0;
   text-align: left;
+  width: min(100%, 42rem);
+  margin: 0 auto;
 }

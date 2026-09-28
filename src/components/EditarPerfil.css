@@ -3,18 +3,21 @@
   flex-direction: column;
   width: min(100%, 42rem);
   margin: 0 auto;
-  color: #fff;
-  font-family: 'Segoe UI', 'Segoe WP', sans-serif;
-  padding: 1.25rem 1.25rem 7rem;
+  background-color: rgba(0, 0, 0, 0.72);
+  border-radius: 0;
+  color: #f1f1ed;
+  font-family: 'Segoe UI', 'Segoe WP', system-ui, sans-serif;
+  padding: clamp(16px, 4vw, 24px) clamp(16px, 4vw, 24px) 7rem clamp(16px, 4vw, 24px);
 }
 
 .editar-perfil-view__header h1 {
   margin: 0 0 32px;
-  color: #fff;
-  font-size: clamp(3rem, 12vw, 4rem);
+  color: #f1f1ed;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: clamp(1.8rem, 5.5vw, 2.8rem);
   font-weight: 200;
-  letter-spacing: -0.08em;
-  line-height: 0.95;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
 }
 
 .editar-perfil-view__form {
@@ -94,19 +97,19 @@
 .editar-perfil-view__form input {
   width: 100%;
   margin-bottom: 0.75rem;
-  padding: 0.65rem 0.7rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 0;
   color: #fff;
-  background: #000;
-  font: inherit;
+  background: rgba(0, 0, 0, 0.5);
+  font-family: 'Segoe UI', 'Segoe WP', system-ui, sans-serif;
   font-size: 1rem;
   font-weight: 300;
 }
 
 .editar-perfil-view__form input:focus {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 2px;
+  outline: none;
+  border-color: var(--accent-color);
 }
 
 .editar-perfil-view__form fieldset {
@@ -125,14 +128,14 @@
 }
 
 .editar-perfil-view__gender {
-  width: 3rem;
+  padding: 0 1rem;
   height: 2.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 0;
   color: #fff;
-  background: #000;
+  background: rgba(0, 0, 0, 0.5);
   cursor: pointer;
-  font: inherit;
+  font-family: 'Segoe UI', 'Segoe WP', system-ui, sans-serif;
   font-size: 1rem;
   text-transform: lowercase;
 }
@@ -163,21 +166,21 @@
 
 .editar-perfil-view__actions button {
   min-width: 6rem;
-  padding: 0.7rem 1rem;
-  border: 0;
+  padding: 12px 16px;
+  border: 2px solid transparent;
   border-radius: 0;
   color: #000;
   background: #fff;
   cursor: pointer;
-  font: inherit;
-  font-size: 0.9rem;
+  font-family: 'Segoe UI', 'Segoe WP', system-ui, sans-serif;
+  font-size: 1.1rem;
   font-weight: 300;
   text-transform: lowercase;
 }
 
 .editar-perfil-view__actions button + button {
-  color: #fff;
-  background: #333;
+  color: #f1f1ed;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .editar-perfil-view__actions button:disabled {

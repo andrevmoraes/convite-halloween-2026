@@ -177,16 +177,23 @@ function App() {
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
         if (isIOS && !isStandalone) {
-          alert('🍎 Para ativar as notificações no iPhone, você precisa adicionar este convite à sua Tela de Início!\n\n1. Clique no botão de Compartilhar (quadrado com setinha) na barra do Safari.\n2. Escolha "Adicionar à Tela de Início".\n3. Abra o App pela tela inicial e tente novamente.');
+          alert('Para receber notificações no iPhone, você precisa primeiro tocar em Compartilhar e depois em Adicionar à Tela de Início.');
           return;
         }
 
+        if (window.Notification && window.Notification.permission === 'denied') {
+          alert('As notificações estão bloqueadas no seu navegador. Você precisa ir nas configurações do site para permitir.');
+          return;
+        }
+
+        // Lembrete: verificar se os arquivos OneSignalSDKWorker.js estão estritamente dentro da pasta public/ do projeto Vite.
         // Must be called directly in the click handler for iOS Safari
         await window.OneSignal.Notifications.requestPermission();
         await window.OneSignal.User.PushSubscription.optIn();
       }
     } catch (error) {
       console.warn('Não foi possível solicitar/alterar notificações:', error);
+      alert('Não foi possível ativar as notificações. Verifique se o seu navegador não está bloqueando os alertas para este site.');
     }
   }
 
@@ -207,8 +214,7 @@ function App() {
   }
 
   const usuarioLogado = loggedUser;
-  const saudacao =
-    usuarioLogado?.genero?.toLowerCase() === 'f' ? 'bem-vinda,' : 'bem-vindo,';
+  const saudacao = 'olá,';
 
   function handleLogout() {
     audioRef.current?.pause();
@@ -399,7 +405,7 @@ function App() {
                 <button
                   className="metro-tile tile-small-2x2"
                   type="button"
-                  disabled={true}
+                  onClick={solicitarNotificacoes}
                 >
                   <div className="tile-icon">
                     <svg
@@ -417,7 +423,7 @@ function App() {
                       <path d="M10 21h4" />
                     </svg>
                   </div>
-                  <span className="tile-label">em breve</span>
+                  <span className="tile-label">{isSubscribed ? 'desativar alertas' : 'ativar alertas'}</span>
                 </button>
               </div>
 
