@@ -16,7 +16,7 @@ function parseRSVP(value) {
   return null;
 }
 
-export default function VotacaoData({ usuarioLogado, onUserUpdate }) {
+export default function VotacaoData({ usuarioLogado, onUserUpdate, skipLocalStorage = false }) {
   const [user, setUser] = useState(usuarioLogado);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -68,7 +68,10 @@ export default function VotacaoData({ usuarioLogado, onUserUpdate }) {
     async function doSave() {
       setErrorMessage('');
 
+      const currentRsvp = parseRSVP(user.data_votada) || {};
+
       const rsvpData = {
+        ...currentRsvp,
         presenca,
         acompanhantes: presenca === 'sim' ? acompanhantes : '',
         contribuicao: presenca === 'sim' ? contribuicao : null,
@@ -90,7 +93,9 @@ export default function VotacaoData({ usuarioLogado, onUserUpdate }) {
       const updatedUser = { ...user, data_votada: serialized };
       setUser(updatedUser);
       onUserUpdate?.(updatedUser);
-      localStorage.setItem('halloween_user', JSON.stringify(updatedUser));
+      if (!skipLocalStorage) {
+        localStorage.setItem('halloween_user', JSON.stringify(updatedUser));
+      }
     }
 
     doSave();
@@ -178,7 +183,7 @@ export default function VotacaoData({ usuarioLogado, onUserUpdate }) {
               </div>
 
               <div className="rsvp-field">
-                <label><br></br>como vai contribuir? (se quiser algo alcoólico, fique à vontade para trazer o seu.)</label>
+                <label><br></br>como vai contribuir? (fique à vontade para trazer a sua bebida alcoólica e não esqueça sua fantasia!)</label>
                 <span className="rsvp-drink-notice"> </span>
                 <div className="rsvp-options rsvp-options--small">
                   <button

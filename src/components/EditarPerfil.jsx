@@ -189,11 +189,13 @@ export default function EditarPerfil({ usuarioLogado, onUserUpdate, onBack, onLo
             </button>
           </div>
 
-          <div className="editar-perfil-view__logout">
-            <button type="button" onClick={onLogout} disabled={isSaving} className="editar-perfil-view__btn-logout">
-              sair da conta
-            </button>
-          </div>
+          {onLogout && (
+            <div className="editar-perfil-view__logout">
+              <button type="button" onClick={onLogout} disabled={isSaving} className="editar-perfil-view__btn-logout">
+                sair da conta
+              </button>
+            </div>
+          )}
         </form>
       </div>
     </motion.section>

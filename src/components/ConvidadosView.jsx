@@ -5,6 +5,8 @@ import {
   formatarCaminhoImagem,
   PLACEHOLDER_PROFILE,
 } from '../lib/formatarCaminhoImagem';
+import EditarPerfil from './EditarPerfil';
+import VotacaoData from './VotacaoData';
 import './ConvidadosView.css';
 
 const panoramaVariants = {
@@ -39,11 +41,12 @@ function getBadgeData(value) {
   try {
     const parsed = JSON.parse(value);
     if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-      if (parsed.presenca === 'nao') return { text: 'não vai', type: 'nao-vai' };
+      const pixPago = parsed.pix_pago === true;
+      if (parsed.presenca === 'nao') return { text: 'não vai', type: 'nao-vai', pixPago };
       if (parsed.presenca === 'sim') {
-        if (parsed.contribuicao === 'pix') return { text: 'PIX', type: 'pix' };
-        if (parsed.contribuicao === 'prato' && parsed.comida) return { text: parsed.comida.toLowerCase(), type: 'prato' };
-        return { text: 'confirmado', type: 'confirmado' };
+        if (parsed.contribuicao === 'pix') return { text: 'PIX', type: 'pix', pixPago };
+        if (parsed.contribuicao === 'prato' && parsed.comida) return { text: parsed.comida.toLowerCase(), type: 'prato', pixPago };
+        return { text: 'confirmado', type: 'confirmado', pixPago };
       }
     }
   } catch {
@@ -72,7 +75,7 @@ export default function ConvidadosView({ anfitriao, onBack }) {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
-  const isAndre = normalizedHostName.includes('andre');
+  const isAdmin = normalizedHostName.includes('andre');
   const andreGuest = guests.find((guest) => {
     const normalizedGuestName = (guest.nome || '')
       .normalize('NFD')
@@ -82,6 +85,8 @@ export default function ConvidadosView({ anfitriao, onBack }) {
     return normalizedGuestName.includes('andre');
   });
   const andrePhoto = andreGuest?.foto_url || '/midia/foto-perfil/andre-moraes.png';
+
+  const [editingGuest, setEditingGuest] = useState(null);
 
   function openGuestForm() {
     setFormError('');
@@ -112,6 +117,45 @@ export default function ConvidadosView({ anfitriao, onBack }) {
     if (file) {
       setFotoArquivo(file);
       setFotoPreview(URL.createObjectURL(file));
+    }
+  }
+
+  function handleEditClick(guest) {
+    if (editingGuest?.id === guest.id) {
+      setEditingGuest(null);
+    } else {
+      setEditingGuest(guest);
+    }
+  }
+
+  async function handleTogglePix(guest) {
+    if (!isAdmin) return;
+    
+    try {
+      let parsed = {};
+      if (guest.data_votada) {
+        parsed = JSON.parse(guest.data_votada);
+      }
+      
+      parsed.pix_pago = !parsed.pix_pago;
+      const newVotada = JSON.stringify(parsed);
+      
+      setGuests((currentGuests) =>
+        currentGuests.map((g) =>
+          g.id === guest.id ? { ...g, data_votada: newVotada } : g
+        )
+      );
+
+      const { error } = await supabase
+        .from('convidados')
+        .update({ data_votada: newVotada })
+        .eq('id', guest.id);
+        
+      if (error) {
+        console.error('Erro ao atualizar PIX', error);
+      }
+    } catch (e) {
+      console.error('Erro ao fazer parse do JSON do PIX', e);
     }
   }
 
@@ -315,29 +359,49 @@ export default function ConvidadosView({ anfitriao, onBack }) {
               <motion.div className="convidados-view__list" variants={panoramaVariants}>
                 {confirmedGuests.map((guest) => {
                   const badge = getBadgeData(guest.data_votada);
+                  const isPixPago = badge && badge.type === 'pix' && badge.pixPago;
+                  const badgeClasses = `metro-vote-badge metro-vote-badge--${badge?.type} ${isPixPago ? 'badge-pix-pago' : ''} ${badge?.type === 'pix' && isAdmin ? 'badge-pix-admin' : ''}`;
+
                   return (
                     <motion.div
-                      className="convidados-view__person"
+                      className="convidados-view__person-wrapper"
                       key={guest.id}
                       variants={turnstileVariants}
                     >
-                      <img
-                        className="convidados-view__photo"
-                        src={formatarCaminhoImagem(guest.foto_url)}
-                        alt={`Foto de ${guest.nome || 'convidado'}`}
-                        onError={(event) => {
-                          event.currentTarget.onerror = null;
-                          event.currentTarget.src = PLACEHOLDER_PROFILE;
-                        }}
-                      />
-                      <span className="convidados-view__name">
-                        {(guest.nome || 'convidado').toLowerCase()}
-                      </span>
-                      {badge && (
-                        <span className={`metro-vote-badge metro-vote-badge--${badge.type}`}>
-                          {badge.text}
+                      <div className="convidados-view__person">
+                        <img
+                          className="convidados-view__photo"
+                          src={formatarCaminhoImagem(guest.foto_url)}
+                          alt={`Foto de ${guest.nome || 'convidado'}`}
+                          onError={(event) => {
+                            event.currentTarget.onerror = null;
+                            event.currentTarget.src = PLACEHOLDER_PROFILE;
+                          }}
+                        />
+                        <span className="convidados-view__name">
+                          {(guest.nome || 'convidado').toLowerCase()}
                         </span>
-                      )}
+                        {isAdmin && (
+                          <button 
+                            type="button" 
+                            className="convidados-view__edit-btn" 
+                            onClick={() => handleEditClick(guest)}
+                          >
+                            editar
+                          </button>
+                        )}
+                        {badge && (
+                          <span 
+                            className={badgeClasses}
+                            onClick={() => {
+                              if (isAdmin && badge.type === 'pix') handleTogglePix(guest);
+                            }}
+                          >
+                            {badge.text}
+                          </span>
+                        )}
+                      </div>
+
                     </motion.div>
                   );
                 })}
@@ -352,22 +416,34 @@ export default function ConvidadosView({ anfitriao, onBack }) {
                 <div className="convidados-view__list">
                   {absentGuests.map((guest) => (
                     <motion.div
-                      className="convidados-view__person convidados-view__person--absent"
+                      className="convidados-view__person-wrapper"
                       key={guest.id}
                       variants={turnstileVariants}
                     >
-                      <img
-                        className="convidados-view__photo"
-                        src={formatarCaminhoImagem(guest.foto_url)}
-                        alt={`Foto de ${guest.nome || 'convidado'}`}
-                        onError={(event) => {
-                          event.currentTarget.onerror = null;
-                          event.currentTarget.src = PLACEHOLDER_PROFILE;
-                        }}
-                      />
-                      <span className="convidados-view__name">
-                        {(guest.nome || 'convidado').toLowerCase()}
-                      </span>
+                      <div className="convidados-view__person convidados-view__person--absent">
+                        <img
+                          className="convidados-view__photo"
+                          src={formatarCaminhoImagem(guest.foto_url)}
+                          alt={`Foto de ${guest.nome || 'convidado'}`}
+                          onError={(event) => {
+                            event.currentTarget.onerror = null;
+                            event.currentTarget.src = PLACEHOLDER_PROFILE;
+                          }}
+                        />
+                        <span className="convidados-view__name">
+                          {(guest.nome || 'convidado').toLowerCase()}
+                        </span>
+                        {isAdmin && (
+                          <button 
+                            type="button" 
+                            className="convidados-view__edit-btn" 
+                            onClick={() => handleEditClick(guest)}
+                          >
+                            editar
+                          </button>
+                        )}
+                      </div>
+
                     </motion.div>
                   ))}
                 </div>
@@ -387,7 +463,7 @@ export default function ConvidadosView({ anfitriao, onBack }) {
         )}
       </motion.div>
 
-      {isAndre && (
+      {isAdmin && (
         <>
           <button
             className="convidados-view__add"
@@ -498,6 +574,44 @@ export default function ConvidadosView({ anfitriao, onBack }) {
                   </div>
                 </form>
               </motion.div>
+            </div>
+          )}
+
+          {editingGuest && (
+            <div
+              className="convidados-view__modal-backdrop"
+              role="presentation"
+              style={{ zIndex: 10, display: 'block', overflowY: 'auto', padding: '2rem 1rem 12rem 1rem' }}
+              onMouseDown={(event) => {
+                if (event.target === event.currentTarget) {
+                  setEditingGuest(null);
+                }
+              }}
+            >
+              <div style={{ margin: '0 auto', width: 'min(100%, 42rem)', borderRadius: '8px', overflow: 'hidden', background: '#000', border: '1px solid #333' }}>
+                <EditarPerfil
+                  usuarioLogado={editingGuest}
+                  onUserUpdate={(updatedGuest) => {
+                    setGuests((currentGuests) =>
+                      currentGuests.map((g) => (g.id === updatedGuest.id ? updatedGuest : g)).sort((a, b) => (a.nome || '').localeCompare(b.nome || '', 'pt-BR'))
+                    );
+                    setEditingGuest(null);
+                  }}
+                  onBack={() => setEditingGuest(null)}
+                />
+                <div style={{ background: '#000', padding: '1.5rem', borderTop: '1px solid #333' }}>
+                  <VotacaoData
+                    usuarioLogado={editingGuest}
+                    skipLocalStorage={true}
+                    onUserUpdate={(updatedGuest) => {
+                      setGuests((currentGuests) =>
+                        currentGuests.map((g) => (g.id === updatedGuest.id ? updatedGuest : g)).sort((a, b) => (a.nome || '').localeCompare(b.nome || '', 'pt-BR'))
+                      );
+                      setEditingGuest(updatedGuest);
+                    }}
+                  />
+                </div>
+              </div>
             </div>
           )}
         </>
