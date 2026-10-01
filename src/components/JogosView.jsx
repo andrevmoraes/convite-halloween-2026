@@ -24,7 +24,7 @@ export default function JogosView({ onBack }) {
             <p>solte a voz com a galera. adicione música na playlist.</p>
           </div>
           <a
-            href="https://open.spotify.com/playlist/6u19bCX2HHdfpUawF5WL0T?si=fb9f62fdafba4346&pt=4efa0dc863c96d88de4b85a4beb02cf9"
+            href="https://open.spotify.com/playlist/6u19bCX2HHdfpUawF5WL0T?si=aab24e28310f4526&pt=211244d0433be628184824b2ee394b19"
             target="_blank"
             rel="noopener noreferrer"
             className="jogo-btn btn-spotify"
