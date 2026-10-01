@@ -1,15 +1,12 @@
-import { motion } from 'framer-motion';
+import { useEffect } from 'react';
 import './JogosView.css';
 
 export default function JogosView({ onBack }) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
-    <motion.div
-      className="jogos-view-container"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
-    >
+    <div className="jogos-view-container">
       <header className="jogos-header">
         <button className="jogos-back-btn" onClick={onBack} type="button" aria-label="Voltar">
           <img width="96" height="96" src="https://img.icons8.com/windows/96/circled-left-2.png" alt="voltar" />
@@ -17,7 +14,8 @@ export default function JogosView({ onBack }) {
         <h1 className="jogos-title">atrações</h1>
       </header>
 
-      <div className="jogos-cards-list">
+      <div className="jogos-cards-scroll">
+        <div className="jogos-cards-list">
 
         {/* Card Karaokê */}
         <div className="jogo-card card-karaoke">
@@ -68,7 +66,8 @@ export default function JogosView({ onBack }) {
           </div>
         </div>
 
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

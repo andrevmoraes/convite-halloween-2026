@@ -10,18 +10,27 @@ const DataEventoTile = () => {
     const dtStart = `${year}1017T200000Z`;
     const dtEnd = `${year}1018T005000Z`;
 
-    const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Andrelloween//NONSGML v1.0//EN
-BEGIN:VEVENT
-UID:${new Date().getTime()}@andrelloween
-DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DTSTART:${dtStart}
-DTEND:${dtEnd}
-SUMMARY:Andrelloween 🎃
-DESCRIPTION:Festa de Halloween do André!
-END:VEVENT
-END:VCALENDAR`;
+    const location = 'Av. Coronel João Leite\\, 300 - Centro\\, Mogi Mirim - SP\\, 13800-034';
+    const now = new Date();
+    const dtstamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+    const lines = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Andrelloween//NONSGML v1.0//EN',
+      'BEGIN:VEVENT',
+      `UID:${now.getTime()}@andrelloween`,
+      `DTSTAMP:${dtstamp}`,
+      `DTSTART:${dtStart}`,
+      `DTEND:${dtEnd}`,
+      'SUMMARY:Andrelloween 🎃',
+      'DESCRIPTION:Festa de Halloween do André!',
+      `LOCATION:${location}`,
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ];
+
+    const icsContent = lines.join('\r\n');
 
     const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -56,3 +65,4 @@ END:VCALENDAR`;
 };
 
 export default DataEventoTile;
+

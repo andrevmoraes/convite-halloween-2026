@@ -5,7 +5,9 @@
   max-height: 850px; /* Limite máximo para telas muito grandes */
   display: flex;
   flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.72);
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: 0;
   overflow: hidden;
   position: relative;
@@ -26,36 +28,31 @@
   align-items: center;
   gap: 6px;
   background-color: transparent;
-  border: 1px solid #25d366;
-  color: #25d366;
+  border: 1px solid #25D366;
+  color: #25D366;
   text-decoration: none;
   padding: 4px 10px;
   font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
   font-size: 0.8rem;
   font-weight: 300;
   text-transform: lowercase;
-  transition: all 0.2s ease;
+  transition: opacity 0.2s ease;
   white-space: nowrap;
 }
 
 .mural-whatsapp-btn img {
   width: 16px;
   height: 16px;
-  filter: brightness(0) saturate(100%) invert(59%) sepia(85%) saturate(415%) hue-rotate(85deg) brightness(94%) contrast(92%); /* Verde WhatsApp */
-  transition: all 0.2s ease;
+  filter: brightness(0) saturate(100%) invert(63%) sepia(77%) saturate(470%) hue-rotate(98deg) brightness(98%) contrast(91%);
 }
 
 .mural-whatsapp-btn:hover {
-  background-color: #25d366;
-  color: #fff;
-}
-
-.mural-whatsapp-btn:hover img {
-  filter: brightness(0) invert(1);
+  opacity: 0.8;
 }
 
 .mural-whatsapp-btn:active {
-  transform: scale(0.95);
+  opacity: 0.6;
+  transform: scale(0.97);
 }
 
 .mural-title {
@@ -99,8 +96,9 @@
   height: 48px;
   object-fit: cover;
   flex-shrink: 0;
-  border-radius: 0; /* quadrado Metro */
+  border-radius: 0;
   background-color: rgba(255, 255, 255, 0.1);
+  margin-top: 2px;
 }
 
 .mural-content {
@@ -118,8 +116,8 @@
 
 .mural-name {
   font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
-  font-weight: 300; /* Linhas finas Windows Phone */
-  font-size: 1.1rem; /* Um pouco maior pra compensar a linha fina */
+  font-weight: 300;
+  font-size: 1.3rem;
   color: #fff;
   text-transform: lowercase;
   margin: 0;
@@ -135,7 +133,7 @@
 .mural-text {
   margin: 0;
   font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   color: #dddddd;
   font-weight: 300;
   line-height: 1.4;
@@ -156,9 +154,9 @@
   background: rgba(255, 255, 255, 0.1);
   border: 2px solid transparent;
   color: #fff;
-  padding: 10px 14px;
+  padding: 12px 14px;
   font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
-  font-size: 1rem;
+  font-size: 1.15rem;
   font-weight: 300;
   outline: none;
   transition: all 0.2s ease;
@@ -230,8 +228,8 @@
 }
 
 .mural-action-btn img {
-  width: 14px;
-  height: 14px;
+  width: 22px;
+  height: 22px;
   filter: invert(1);
 }
 
@@ -279,3 +277,4 @@
   background: rgba(255, 255, 255, 0.1);
   border-color: #fff;
 }
+

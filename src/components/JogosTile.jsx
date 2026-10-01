@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-// Puxa automaticamente todas as imagens da pasta public/midia/tiles usando o Vite
-const tilesGlob = import.meta.glob('/public/midia/tiles/*.{png,jpg,jpeg,webp,gif}', { eager: true });
-const imagePaths = Object.keys(tilesGlob).map(path => path.replace('/public', ''));
+const imagePaths = [
+  '/midia/tiles/bingo.png',
+  '/midia/tiles/just-dance.png',
+  '/midia/tiles/spotify.png',
+  '/midia/tiles/xbox-one.png'
+];
 
 const conteudos = [
   'main', // Indica a face principal com texto
@@ -14,26 +17,24 @@ export default function JogosTile({ onClick }) {
   const [contentCount, setContentCount] = useState(0);
 
   useEffect(() => {
-    // Calcula qual face está sendo exibida agora
-    const currentFaceIndex = flipCount % conteudos.length;
-    const isMainFace = conteudos[currentFaceIndex] === 'main';
-    
-    // 7 segundos se for o texto, 5 segundos se for uma imagem
-    const delay = isMainFace ? 7000 : 5000;
+    let innerTimeoutId;
 
-    const timeoutId = setTimeout(() => {
+    const intervalId = setInterval(() => {
       // 1. Dispara a rotação
       setFlipCount((c) => c + 1);
       
-      // 2. Troca o conteúdo no meio do giro (300ms)
-      setTimeout(() => {
+      // 2. Troca o conteúdo da face que ficou oculta no meio do giro (300ms)
+      innerTimeoutId = setTimeout(() => {
         setContentCount((c) => c + 1);
       }, 300);
 
-    }, delay);
+    }, 5500);
 
-    return () => clearTimeout(timeoutId);
-  }, [flipCount]);
+    return () => {
+      clearInterval(intervalId);
+      clearTimeout(innerTimeoutId);
+    };
+  }, []);
 
   const getIndex = (count) => count % conteudos.length;
 

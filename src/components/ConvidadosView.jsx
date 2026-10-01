@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import {
@@ -237,6 +237,7 @@ export default function ConvidadosView({ anfitriao, onBack }) {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     let isActive = true;
 
     async function loadGuests() {
@@ -304,7 +305,7 @@ export default function ConvidadosView({ anfitriao, onBack }) {
   });
 
   return (
-    <motion.section
+    <section
       className="convidados-view"
       aria-labelledby="convidados-title"
       variants={panoramaVariants}
@@ -323,23 +324,24 @@ export default function ConvidadosView({ anfitriao, onBack }) {
         <h1 id="convidados-title">convidados</h1>
       </header>
 
-      <motion.div className="convidados-view__content" variants={panoramaVariants}>
+      <div className="convidados-view__scroll">
+        <div className="convidados-view__content" variants={panoramaVariants}>
         {isLoading && (
-          <motion.p className="convidados-view__status" variants={turnstileVariants}>
+          <p className="convidados-view__status" variants={turnstileVariants}>
             carregando...
-          </motion.p>
+          </p>
         )}
         {errorMessage && (
-          <motion.p
+          <p
             className="convidados-view__status convidados-view__status--error"
             variants={turnstileVariants}
           >
             {errorMessage}
-          </motion.p>
+          </p>
         )}
         {!isLoading && !errorMessage && (
           <>
-            <motion.div
+            <div
               className="convidados-view__highlight"
               variants={turnstileVariants}
             >
@@ -361,16 +363,16 @@ export default function ConvidadosView({ anfitriao, onBack }) {
                   convidado para o maior evento do ano."
                 </p>
               </div>
-            </motion.div>
+            </div>
             {confirmedGuests.length > 0 ? (
-              <motion.div className="convidados-view__list" variants={panoramaVariants}>
+              <div className="convidados-view__list" variants={panoramaVariants}>
                 {confirmedGuests.map((guest) => {
                   const badge = getBadgeData(guest.data_votada);
                   const isPixPago = badge && badge.type === 'pix' && badge.pixPago;
                   const badgeClasses = `metro-vote-badge metro-vote-badge--${badge?.type} ${isPixPago ? 'badge-pix-pago' : ''} ${badge?.type === 'pix' && isAdmin ? 'badge-pix-admin' : ''}`;
 
                   return (
-                    <motion.div
+                    <div
                       className="convidados-view__person-wrapper"
                       key={guest.id}
                       variants={turnstileVariants}
@@ -409,20 +411,20 @@ export default function ConvidadosView({ anfitriao, onBack }) {
                         )}
                       </div>
 
-                    </motion.div>
+                    </div>
                   );
                 })}
-              </motion.div>
+              </div>
             ) : (
-              <motion.div className="metro-empty-state" variants={turnstileVariants}>nenhum convidado confirmado ainda.</motion.div>
+              <div className="metro-empty-state" variants={turnstileVariants}>nenhum convidado confirmado ainda.</div>
             )}
 
             {absentGuests.length > 0 && (
-              <motion.div className="convidados-view__absent-section" variants={panoramaVariants}>
+              <div className="convidados-view__absent-section" variants={panoramaVariants}>
                 <h3 className="convidados-view__absent-title">não vão</h3>
                 <div className="convidados-view__list">
                   {absentGuests.map((guest) => (
-                    <motion.div
+                    <div
                       className="convidados-view__person-wrapper"
                       key={guest.id}
                       variants={turnstileVariants}
@@ -451,18 +453,18 @@ export default function ConvidadosView({ anfitriao, onBack }) {
                         )}
                       </div>
 
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
-              </motion.div>
+              </div>
             )}
 
             {isAdmin && unvotedGuests.length > 0 && (
-              <motion.div className="convidados-view__absent-section" variants={panoramaVariants}>
+              <div className="convidados-view__absent-section" variants={panoramaVariants}>
                 <h3 className="convidados-view__absent-title">ainda não votaram</h3>
                 <div className="convidados-view__list">
                   {unvotedGuests.map((guest) => (
-                    <motion.div
+                    <div
                       className="convidados-view__person-wrapper"
                       key={guest.id}
                       variants={turnstileVariants}
@@ -491,16 +493,17 @@ export default function ConvidadosView({ anfitriao, onBack }) {
                         )}
                       </div>
 
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
-              </motion.div>
+              </div>
             )}
 
             
           </>
         )}
-      </motion.div>
+      </div>
+      </div>
 
       {isAdmin && (
         <>
@@ -527,7 +530,7 @@ export default function ConvidadosView({ anfitriao, onBack }) {
                 }
               }}
             >
-              <motion.div
+              <div
                 className="convidados-view__modal"
                 role="dialog"
                 aria-modal="true"
@@ -597,7 +600,7 @@ export default function ConvidadosView({ anfitriao, onBack }) {
                     </button>
                   </div>
                 </form>
-              </motion.div>
+              </div>
             </div>
           )}
 
@@ -640,6 +643,6 @@ export default function ConvidadosView({ anfitriao, onBack }) {
           )}
         </>
       )}
-    </motion.section>
+    </section>
   );
 }

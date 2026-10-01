@@ -1,4 +1,4 @@
-.app-message {
+﻿.app-message {
   position: fixed;
   right: 1rem;
   bottom: 1rem;
@@ -121,9 +121,9 @@
 
 .tile-me__greeting {
   margin: 0;
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: #ffffff !important;
   font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif !important;
-  font-size: 13px !important;
+  font-size: 15px !important;
   font-weight: 300 !important;
   letter-spacing: 0.5px !important;
   line-height: 1.2 !important;
@@ -134,7 +134,7 @@
   margin: 0;
   color: #ffffff !important;
   font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif !important;
-  font-size: 13px !important;
+  font-size: 15px !important;
   font-weight: 300 !important;
   letter-spacing: 0.5px !important;
   line-height: 1.2 !important;
@@ -178,6 +178,37 @@
   align-items: flex-start;
 }
 
+/* 3b. Tile 2x1: 4 colunas de largura, 1 unidade de altura */
+.tile-wide-2x1 {
+  grid-column: span 4;
+  height: var(--base-tile-height);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  text-align: left;
+  position: relative;
+}
+
+.tile-wide-2x1 .tile-icon {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  pointer-events: none;
+}
+
+.tile-wide-2x1 .tile-icon svg,
+.tile-wide-2x1 .tile-icon img {
+  display: block;
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
 /* 4. Tiles Small 2x2 (2 colunas cada) */
 .tile-small-2x2 {
   grid-column: span 2;
@@ -218,7 +249,7 @@
 .metro-tile .tile-label {
   display: block;
   font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif !important;
-  font-size: 13px !important;
+  font-size: 15px !important;
   font-weight: 300 !important;
   letter-spacing: 0.5px !important;
   text-transform: lowercase !important;
@@ -409,13 +440,14 @@
 }
 
 .tile-whatsapp {
-  background-color: #25d366 !important;
-  --glow-color: rgba(37, 211, 102, 0.8);
-  --glow-color-dim: rgba(37, 211, 102, 0.5);
+  background-color: #25D366 !important;
+  --glow-color: rgba(18, 140, 126, 0.8);
+  --glow-color-dim: rgba(18, 140, 126, 0.5);
   animation: dynamicGlow 3s ease-in-out infinite;
-  z-index: 1; /* To ensure glow shows above other tiles */
+  z-index: 1;
 }
 
 .tile-jogos {
   background-color: #107c10 !important;
 }
+

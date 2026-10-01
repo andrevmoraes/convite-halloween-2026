@@ -1,47 +1,74 @@
 .convidados-view {
-  position: fixed;
-  z-index: 1;
+  position: absolute;
+  z-index: 10;
   top: 0;
   right: 0;
-  bottom: 0;
   left: 0;
+  min-height: 100vh;
   display: flex;
-  width: 100vw;
   flex-direction: column;
-  gap: 0;
-  overflow: hidden;
-  padding: 1.25rem 1.25rem 0;
+  padding: 0 1.25rem 0;
   color: #fff;
-  background: #000;
-  perspective: 1000px;
+}
+
+.convidados-view::before {
+  content: '';
+  position: fixed;
+  top: -10px;
+  right: -10px;
+  bottom: -10px;
+  left: -10px;
+  z-index: -1;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .convidados-view__header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding-top: 1.25rem;
+  padding-bottom: 1rem;
   display: flex;
   flex: 0 0 auto;
   width: min(100%, 42rem);
-  margin: 0 auto 32px;
+  margin: 0 auto 16px;
   align-items: center;
   gap: 16px;
 }
 
-.convidados-view__content {
-  display: flex;
-  min-height: 0;
-  flex: 1 1 auto;
-  flex-direction: column;
-  gap: 1.75rem;
-  overflow-y: auto;
-  padding: 1.75rem 0 7rem;
-  scrollbar-width: thin;
+.convidados-view__header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: -1;
 }
 
-.convidados-view__content::-webkit-scrollbar {
+.convidados-view__scroll {
+  width: 100%;
+}
+
+.convidados-view__scroll::-webkit-scrollbar {
   width: 4px;
 }
 
-.convidados-view__content::-webkit-scrollbar-thumb {
+.convidados-view__scroll::-webkit-scrollbar-thumb {
   background: #444;
+}
+
+.convidados-view__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  padding: 1.75rem 0 7rem;
 }
 
 .convidados-view h1 {
@@ -113,16 +140,16 @@
 
 .convidados-view__photo {
   display: block;
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
+  width: 50px;
+  height: 50px;
+  flex: 0 0 50px;
   object-fit: cover;
   border-radius: 0;
 }
 
 .convidados-view__name {
   color: #fff;
-  font-size: 1.125rem;
+  font-size: 1.4rem;
   font-weight: 300;
   line-height: 1.2;
   flex: 1;
@@ -408,15 +435,15 @@
   background-color: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 0 !important;
-  padding: 4px 8px;
-  font-size: 11px;
+  padding: 6px 12px;
+  font-size: 14px;
   font-weight: 400;
   text-transform: lowercase;
   color: rgba(255, 255, 255, 0.85);
   margin-left: auto;
   white-space: nowrap;
   align-self: center;
-  max-width: 140px;
+  max-width: 180px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -457,8 +484,8 @@
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: #fff;
-  padding: 4px 8px;
-  font-size: 11px;
+  padding: 6px 12px;
+  font-size: 14px;
   cursor: pointer;
   margin-left: 8px;
   text-transform: lowercase;

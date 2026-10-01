@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, MotionConfig } from 'framer-motion';
 
 import ConvidadosView from './components/ConvidadosView';
 import EditarPerfil from './components/EditarPerfil';
@@ -136,10 +136,32 @@ function App() {
     : `https://www.google.com/maps/search/?api=1&query=${queryEncoded}`;
 
 
-  useEffect(() => () => {
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+
+  useEffect(() => {
+    const handleFocus = (e) => {
+      const tag = e.target.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea') {
+        setIsKeyboardOpen(true);
+      }
+    };
+    const handleBlur = (e) => {
+      const tag = e.target.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea') {
+        setIsKeyboardOpen(false);
+      }
+    };
+
+    window.addEventListener('focusin', handleFocus);
+    window.addEventListener('focusout', handleBlur);
+
+    return () => {
+      window.removeEventListener('focusin', handleFocus);
+      window.removeEventListener('focusout', handleBlur);
     if (copiadoTimer.current !== null) {
       clearTimeout(copiadoTimer.current);
     }
+    };
   }, []);
 
 
@@ -314,16 +336,13 @@ function App() {
   }
 
   return (
-    <>
+    <MotionConfig reducedMotion="always">
       {!isValidated && (
         <PortaEntrada onConfirm={handleConfirm} onStartAudio={startAudio} />
       )}
       {isValidated && (
         <motion.main
           className="halloween-hub"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5, ease: 'easeOut' }}
         >
           {telaAtual === 'convidados' ? (
             <div className="halloween-hub__content">
@@ -361,11 +380,12 @@ function App() {
               >
                 <div className="tile-icon">
                   <img
-                    src="https://img.icons8.com/windows/96/whatsapp--v1.png"
+                    src="/midia/Digital_Glyph_White_RGB_2026.svg"
                     alt="WhatsApp"
                     width="42"
                     height="42"
                     className="tile-icon-img"
+                    style={{ filter: 'none' }}
                   />
                 </div>
                 <span className="tile-label">entrar no grupo</span>
@@ -419,11 +439,14 @@ function App() {
 
               {/* Tile Convidados: 6 colunas de largura, 1 unidade de altura */}
               <button
-                className="metro-tile tile-wide-full"
+                className="metro-tile tile-wide-2x1"
                 type="button"
                 onClick={() => setTelaAtual('convidados')}
               >
-                <span className="tile-label">confirmados e seus pratos</span>
+                <div className="tile-icon">
+                  <img width="96" height="96" src="https://img.icons8.com/windows/96/gender-neutral-user.png" alt="convidados" className="tile-icon-img" />
+                </div>
+                <span className="tile-label">convidados</span>
               </button>
 
               {/* Tile Small 1: Fotos do ano passado (2 colunas) */}
@@ -468,7 +491,7 @@ function App() {
 
               {/* Tile Small 3: Abrir Mapa (2 colunas) */}
               <a
-                className="metro-tile tile-small-2x2"
+                className="metro-tile tile-wide-2x1"
                 href={linkMapa}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -490,9 +513,9 @@ function App() {
         isPlaying={isPlaying}
         onTogglePlayback={togglePlayback}
         onNextTrack={nextTrack}
-        isVisible={isValidated}
+        isVisible={isValidated && !isKeyboardOpen}
       />
-    </>
+    </MotionConfig>
   );
 }
 

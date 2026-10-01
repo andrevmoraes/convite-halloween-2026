@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
 import { formatarCaminhoImagem } from '../lib/formatarCaminhoImagem';
@@ -22,6 +22,10 @@ const panoramaVariants = {
 };
 
 export default function EditarPerfil({ usuarioLogado, onUserUpdate, onBack, onLogout }) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [formData, setFormData] = useState({
     nome: usuarioLogado?.nome || '',
     telefone: usuarioLogado?.telefone || '',
@@ -118,13 +122,16 @@ export default function EditarPerfil({ usuarioLogado, onUserUpdate, onBack, onLo
 
   return (
     <motion.section
-      className="editar-perfil-view"
+      className="editar-perfil-view-container"
       aria-labelledby="editar-perfil-title"
       variants={panoramaVariants}
       initial="hidden"
       animate="visible"
     >
-      <header className="editar-perfil-view__header">
+      <header className="editar-perfil-header">
+        <button className="editar-perfil-back-btn" onClick={onBack} type="button" aria-label="Voltar">
+          <img width="96" height="96" src="https://img.icons8.com/windows/96/circled-left-2.png" alt="voltar" />
+        </button>
         <h1 id="editar-perfil-title">editar perfil</h1>
       </header>
 
@@ -183,9 +190,6 @@ export default function EditarPerfil({ usuarioLogado, onUserUpdate, onBack, onLo
           <div className="editar-perfil-view__actions">
             <button type="submit" disabled={isSaving}>
               {isSaving ? 'salvando...' : 'salvar alterações'}
-            </button>
-            <button type="button" onClick={onBack} disabled={isSaving}>
-              cancelar
             </button>
           </div>
 

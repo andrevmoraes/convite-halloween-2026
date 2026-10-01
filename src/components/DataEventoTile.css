@@ -48,10 +48,11 @@
 .data-evento-icon {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   opacity: 0.9;
   margin-left: 12px;
   flex-shrink: 0;
+  align-self: stretch;
 }
 
 .data-evento-icon img {

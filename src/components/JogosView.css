@@ -1,27 +1,55 @@
 .jogos-view-container {
-  position: fixed;
-  z-index: 1;
+  position: absolute;
+  z-index: 10;
   top: 0;
   right: 0;
-  bottom: 0;
   left: 0;
+  min-height: 100vh;
   display: flex;
-  width: 100vw;
   flex-direction: column;
-  gap: 0;
-  overflow: hidden;
-  padding: 1.25rem 1.25rem 0;
+  padding: 0 1.25rem 0;
   color: #fff;
-  background: #000;
+}
+
+.jogos-view-container::before {
+  content: '';
+  position: fixed;
+  top: -10px;
+  right: -10px;
+  bottom: -10px;
+  left: -10px;
+  z-index: -1;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .jogos-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding-top: 1.25rem;
+  padding-bottom: 1rem;
   display: flex;
   flex: 0 0 auto;
   width: min(100%, 42rem);
-  margin: 0 auto 32px;
+  margin: 0 auto 16px;
   align-items: center;
   gap: 16px;
+}
+
+.jogos-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: -1;
 }
 
 .jogos-back-btn {
@@ -57,31 +85,30 @@
   text-transform: lowercase;
 }
 
-.jogos-cards-list {
-  display: flex;
-  min-height: 0;
-  flex: 1 1 auto;
-  flex-direction: column;
-  gap: 20px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 0 0 7rem;
-  scrollbar-width: thin;
-  width: min(100%, 42rem);
-  margin: 0 auto;
+.jogos-cards-scroll {
+  width: 100%;
 }
 
-.jogos-cards-list::-webkit-scrollbar {
+.jogos-cards-scroll::-webkit-scrollbar {
   width: 4px;
 }
 
-.jogos-cards-list::-webkit-scrollbar-track {
+.jogos-cards-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.jogos-cards-list::-webkit-scrollbar-thumb {
+.jogos-cards-scroll::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 4px;
+}
+
+.jogos-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0 0 7rem;
+  width: min(100%, 42rem);
+  margin: 0 auto;
 }
 
 .jogo-card {
@@ -119,15 +146,15 @@
 
 .jogo-info h2 {
   margin: 0;
-  font-size: 1.6rem;
-  font-weight: 400;
+  font-size: 1.9rem;
+  font-weight: 300;
   color: #ffffff;
   text-transform: lowercase;
 }
 
 .jogo-info p {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 300;
   color: #bbbbbb;
   line-height: 1.5;
@@ -140,10 +167,10 @@
   gap: 12px;
   text-decoration: none;
   font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
-  font-size: 1.1rem;
-  font-weight: 400;
+  font-size: 1.25rem;
+  font-weight: 300;
   text-transform: lowercase;
-  padding: 14px 20px;
+  padding: 16px 20px;
   border: 2px solid transparent;
   color: #fff;
   cursor: pointer;
@@ -156,35 +183,23 @@
   filter: invert(1);
 }
 
-/* Botão Karaoke */
+/* Botão Karaoke - sempre preenchido */
 .btn-spotify {
-  background-color: transparent;
-  border-color: #1DB954;
-  color: #1DB954;
-}
-
-.btn-spotify img { filter: none; }
-
-.btn-spotify:hover {
   background-color: #1DB954;
+  border-color: #1DB954;
   color: #000;
 }
-.btn-spotify:hover img { filter: brightness(0); }
 
-/* Botão Just Dance */
+.btn-spotify img { filter: brightness(0); }
+
+/* Botão Just Dance - sempre preenchido */
 .btn-justdance {
-  background-color: transparent;
-  border-color: #E1306C;
-  color: #E1306C;
-}
-
-.btn-justdance img { filter: none; }
-
-.btn-justdance:hover {
   background-color: #E1306C;
+  border-color: #E1306C;
   color: #fff;
 }
-.btn-justdance:hover img { filter: brightness(0) invert(1); }
+
+.btn-justdance img { filter: brightness(0) invert(1); }
 
 /* Botão Bingo (Informativo) */
 .btn-bingo {
