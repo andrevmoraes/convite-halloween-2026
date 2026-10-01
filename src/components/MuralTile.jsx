@@ -10,6 +10,24 @@ export default function MuralTile({ usuarioLogado }) {
   const [editingId, setEditingId] = useState(null);
   const [editContent, setEditContent] = useState('');
   const feedRef = useRef(null);
+  const inputRef = useRef(null);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [inputBottom, setInputBottom] = useState(0);
+
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    const handle = () => {
+      const isOpen = vv.height < window.innerHeight * 0.75;
+      setKeyboardOpen(isOpen);
+      if (isOpen) setInputBottom(window.innerHeight - vv.height);
+      else setInputBottom(0);
+    };
+
+    vv.addEventListener('resize', handle);
+    return () => vv.removeEventListener('resize', handle);
+  }, []);
 
   const fetchMessages = async () => {
     const { data, error } = await supabase
@@ -193,8 +211,19 @@ export default function MuralTile({ usuarioLogado }) {
         })}
       </div>
 
-      <form className="mural-input-area" onSubmit={handleSubmit}>
+      <form
+        className="mural-input-area"
+        onSubmit={handleSubmit}
+        style={keyboardOpen ? {
+          position: 'fixed',
+          bottom: inputBottom,
+          left: 0,
+          right: 0,
+          zIndex: 100,
+        } : undefined}
+      >
         <input
+          ref={inputRef}
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
