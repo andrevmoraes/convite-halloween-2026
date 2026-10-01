@@ -1,0 +1,281 @@
+.mural-tile {
+  grid-column: span 6;
+  height: calc(100dvh - 160px); /* Ocupa a tela inteira menos um respiro em cima e embaixo */
+  min-height: 400px; /* Garante que não fique minúsculo em telas pequenas */
+  max-height: 850px; /* Limite máximo para telas muito grandes */
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.72);
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.mural-header {
+  padding: 20px 16px;
+  background-color: transparent;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.mural-whatsapp-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: transparent;
+  border: 1px solid #25d366;
+  color: #25d366;
+  text-decoration: none;
+  padding: 4px 10px;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+  text-transform: lowercase;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.mural-whatsapp-btn img {
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) saturate(100%) invert(59%) sepia(85%) saturate(415%) hue-rotate(85deg) brightness(94%) contrast(92%); /* Verde WhatsApp */
+  transition: all 0.2s ease;
+}
+
+.mural-whatsapp-btn:hover {
+  background-color: #25d366;
+  color: #fff;
+}
+
+.mural-whatsapp-btn:hover img {
+  filter: brightness(0) invert(1);
+}
+
+.mural-whatsapp-btn:active {
+  transform: scale(0.95);
+}
+
+.mural-title {
+  margin: 0;
+  padding: 0;
+  color: #f1f1ed;
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  font-weight: 200;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  text-transform: lowercase;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+}
+
+.mural-feed {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior-y: auto; /* Permite rolar a página inteira quando chegar no limite do card */
+  display: flex;
+  flex-direction: column-reverse;
+  padding: 16px;
+  gap: 16px;
+  
+  /* Esconder barra de rolagem (scrollbar) usando pseudo-elementos webkit */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.mural-feed::-webkit-scrollbar {
+  display: none;
+}
+
+.mural-message {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.mural-photo {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border-radius: 0; /* quadrado Metro */
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mural-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mural-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.mural-name {
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-weight: 300; /* Linhas finas Windows Phone */
+  font-size: 1.1rem; /* Um pouco maior pra compensar a linha fina */
+  color: #fff;
+  text-transform: lowercase;
+  margin: 0;
+}
+
+.mural-time {
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 0.8rem;
+  color: #aaaaaa;
+  font-weight: 300;
+}
+
+.mural-text {
+  margin: 0;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 0.95rem;
+  color: #dddddd;
+  font-weight: 300;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.mural-input-area {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+  gap: 8px;
+}
+
+.mural-input-area input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid transparent;
+  color: #fff;
+  padding: 10px 14px;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  outline: none;
+  transition: all 0.2s ease;
+  border-radius: 0;
+}
+
+.mural-input-area input:focus {
+  border-color: var(--accent-color, #F06000);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.mural-input-area input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.mural-input-area button {
+  background: transparent;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.mural-input-area button:hover:not(:disabled) {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.mural-input-area button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.mural-input-area button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.mural-input-area button img {
+  width: 28px;
+  height: 28px;
+  filter: invert(1);
+}
+
+.mural-actions {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.mural-action-btn {
+  background: transparent;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.mural-action-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.mural-action-btn img {
+  width: 14px;
+  height: 14px;
+  filter: invert(1);
+}
+
+.mural-edit-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.mural-edit-area input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  border-radius: 0;
+  transition: border-color 0.2s;
+}
+
+.mural-edit-area input:focus {
+  border-color: var(--accent-color, #F06000);
+}
+
+.mural-edit-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.mural-edit-actions button {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mural-edit-actions button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
+}

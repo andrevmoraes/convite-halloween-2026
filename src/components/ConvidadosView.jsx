@@ -44,7 +44,7 @@ function getBadgeData(value) {
       const pixPago = parsed.pix_pago === true;
       if (parsed.presenca === 'nao') return { text: 'não vai', type: 'nao-vai', pixPago };
       if (parsed.presenca === 'sim') {
-        if (parsed.contribuicao === 'pix') return { text: 'PIX', type: 'pix', pixPago };
+        if (parsed.contribuicao === 'pix') return { text: pixPago ? 'pix pago' : 'PIX', type: 'pix', pixPago };
         if (parsed.contribuicao === 'prato' && parsed.comida) return { text: parsed.comida.toLowerCase(), type: 'prato', pixPago };
         return { text: 'confirmado', type: 'confirmado', pixPago };
       }
@@ -65,7 +65,6 @@ export default function ConvidadosView({ anfitriao, onBack }) {
   const [formError, setFormError] = useState('');
   const [formData, setFormData] = useState({
     nome: '',
-    genero: '',
     telefone: '',
   });
   const [fotoArquivo, setFotoArquivo] = useState(null);
@@ -159,14 +158,7 @@ export default function ConvidadosView({ anfitriao, onBack }) {
     }
   }
 
-  function handleGenderChange(genero) {
-    setFormData((currentData) => ({
-      ...currentData,
-      genero,
-    }));
-  }
-
-  async function handleSubmit(event) {
+    async function handleSubmit(event) {
     event.preventDefault();
     setFormError('');
 
@@ -185,7 +177,6 @@ export default function ConvidadosView({ anfitriao, onBack }) {
         .from('convidados')
         .insert({
           nome,
-          genero: formData.genero || null,
           telefone: telefone || null,
         })
         .select()
@@ -233,7 +224,7 @@ export default function ConvidadosView({ anfitriao, onBack }) {
           (firstGuest.nome || '').localeCompare(secondGuest.nome || '', 'pt-BR'),
         ),
       );
-      setFormData({ nome: '', genero: '', telefone: '' });
+      setFormData({ nome: '', telefone: '' });
       setFotoArquivo(null);
       setFotoPreview(null);
       setIsFormOpen(false);
@@ -304,6 +295,14 @@ export default function ConvidadosView({ anfitriao, onBack }) {
     return badge && badge.type === 'nao-vai';
   });
 
+  const unvotedGuests = guests.filter((guest) => {
+    const normalizedName = (guest.nome || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    if (normalizedName.includes('andre')) return false;
+
+    const badge = getBadgeData(guest.data_votada);
+    return !badge;
+  });
+
   return (
     <motion.section
       className="convidados-view"
@@ -313,6 +312,14 @@ export default function ConvidadosView({ anfitriao, onBack }) {
       animate="visible"
     >
       <header className="convidados-view__header">
+        <button
+          className="convidados-view__back-icon"
+          type="button"
+          onClick={onBack}
+          aria-label="Voltar para a página inicial"
+        >
+          <img width="96" height="96" src="https://img.icons8.com/windows/96/circled-left-2.png" alt="circled-left-2"/>
+        </button>
         <h1 id="convidados-title">convidados</h1>
       </header>
 
@@ -450,15 +457,47 @@ export default function ConvidadosView({ anfitriao, onBack }) {
               </motion.div>
             )}
 
-            <motion.button
-              className="convidados-view__back"
-              type="button"
-              onClick={onBack}
-              aria-label="Voltar para a página inicial"
-              variants={turnstileVariants}
-            >
-              ← voltar
-            </motion.button>
+            {isAdmin && unvotedGuests.length > 0 && (
+              <motion.div className="convidados-view__absent-section" variants={panoramaVariants}>
+                <h3 className="convidados-view__absent-title">ainda não votaram</h3>
+                <div className="convidados-view__list">
+                  {unvotedGuests.map((guest) => (
+                    <motion.div
+                      className="convidados-view__person-wrapper"
+                      key={guest.id}
+                      variants={turnstileVariants}
+                    >
+                      <div className="convidados-view__person convidados-view__person--absent">
+                        <img
+                          className="convidados-view__photo"
+                          src={formatarCaminhoImagem(guest.foto_url)}
+                          alt={`Foto de ${guest.nome || 'convidado'}`}
+                          onError={(event) => {
+                            event.currentTarget.onerror = null;
+                            event.currentTarget.src = PLACEHOLDER_PROFILE;
+                          }}
+                        />
+                        <span className="convidados-view__name">
+                          {(guest.nome || 'convidado').toLowerCase()}
+                        </span>
+                        {isAdmin && (
+                          <button 
+                            type="button" 
+                            className="convidados-view__edit-btn" 
+                            onClick={() => handleEditClick(guest)}
+                          >
+                            editar
+                          </button>
+                        )}
+                      </div>
+
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            
           </>
         )}
       </motion.div>
@@ -471,7 +510,11 @@ export default function ConvidadosView({ anfitriao, onBack }) {
             onClick={openGuestForm}
             aria-label="Adicionar convidado"
           >
-            +
+            <svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 24 24" fill="#000" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="11"></circle>
+              <line x1="12" y1="8" x2="12" y2="16"></line>
+              <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
           </button>
 
           {isFormOpen && (
@@ -527,26 +570,7 @@ export default function ConvidadosView({ anfitriao, onBack }) {
                     required
                   />
 
-                  <fieldset>
-                    <legend>gênero</legend>
-                    <div className="convidados-view__gender-options">
-                      {['m', 'f'].map((gender) => (
-                        <button
-                          className={`convidados-view__gender ${
-                            formData.genero === gender
-                              ? 'convidados-view__gender--selected'
-                              : ''
-                          }`}
-                          key={gender}
-                          type="button"
-                          aria-pressed={formData.genero === gender}
-                          onClick={() => handleGenderChange(gender)}
-                        >
-                          {gender}
-                        </button>
-                      ))}
-                    </div>
-                  </fieldset>
+                  
 
                   <label htmlFor="guest-phone">telefone</label>
                   <input

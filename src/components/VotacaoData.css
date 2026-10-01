@@ -198,3 +198,18 @@
   font-size: 0.9rem;
   margin: 0;
 }
+
+/* Estilos para o modo colapsado/compacto */
+.rsvp-options--compact-grid {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.rsvp-tile--compact {
+  padding: 10px 16px !important;
+  font-size: 1.1rem !important;
+  min-height: 48px !important;
+  justify-content: center !important;
+  text-align: center !important;
+}

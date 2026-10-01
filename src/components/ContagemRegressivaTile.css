@@ -1,0 +1,52 @@
+.tile-contagem {
+  grid-column: span 4;
+  height: var(--base-tile-height);
+  background-color: #5c2d91; /* Um roxo bem Windows Phone / Halloween */
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+  position: relative;
+  cursor: default !important; /* Já que não tem ação de clique no momento */
+}
+
+.tile-contagem:active {
+  transform: none !important;
+  filter: none !important;
+}
+
+.tile-contagem__content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.tile-contagem__numbers {
+  display: flex;
+  gap: clamp(8px, 2vw, 32px);
+  text-align: center;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
+.tile-contagem__block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.tile-contagem__value {
+  font-size: clamp(2.25rem, 6vw, 3rem);
+  font-weight: 300;
+  line-height: 1;
+  margin-bottom: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.tile-contagem__label {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  font-weight: 400;
+}

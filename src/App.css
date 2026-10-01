@@ -54,6 +54,7 @@
   width: min(100%, 42rem);
   margin: 0 auto;
   container-type: inline-size;
+  --base-tile-height: calc((100cqw - 16px) / 3);
 }
 
 /* Base Metro Tile Styling */
@@ -180,7 +181,7 @@
 /* 4. Tiles Small 2x2 (2 colunas cada) */
 .tile-small-2x2 {
   grid-column: span 2;
-  aspect-ratio: 1 / 1;
+  height: var(--base-tile-height);
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -364,6 +365,18 @@
   background: #fff;
 }
 
+.halloween-player__icon {
+  width: 24px;
+  height: 24px;
+  filter: invert(1);
+  transition: filter 120ms ease;
+}
+
+.halloween-player__button:active .halloween-player__icon {
+  filter: invert(0);
+}
+
+
 .halloween-player__button:focus-visible {
   outline: 3px solid var(--accent-color);
   outline-offset: 3px;
@@ -381,4 +394,28 @@
   .halloween-player__title {
     font-size: 0.75rem;
   }
+}
+
+@keyframes dynamicGlow {
+  0% {
+    box-shadow: 0 0 5px 1px var(--glow-color-dim, rgba(46, 139, 87, 0.4));
+  }
+  50% {
+    box-shadow: 0 0 10px 3px var(--glow-color, rgba(46, 139, 87, 0.8));
+  }
+  100% {
+    box-shadow: 0 0 5px 1px var(--glow-color-dim, rgba(46, 139, 87, 0.4));
+  }
+}
+
+.tile-whatsapp {
+  background-color: #25d366 !important;
+  --glow-color: rgba(37, 211, 102, 0.8);
+  --glow-color-dim: rgba(37, 211, 102, 0.5);
+  animation: dynamicGlow 3s ease-in-out infinite;
+  z-index: 1; /* To ensure glow shows above other tiles */
+}
+
+.tile-jogos {
+  background-color: #107c10 !important;
 }

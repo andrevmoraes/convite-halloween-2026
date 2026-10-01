@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { VscChevronRight, VscDebugPause, VscPlay } from 'react-icons/vsc';
+
 import ConvidadosView from './components/ConvidadosView';
 import EditarPerfil from './components/EditarPerfil';
 import PortaEntrada from './components/PortaEntrada';
 import VotacaoData from './components/VotacaoData';
 import DataEventoTile from './components/DataEventoTile';
+import ContagemRegressivaTile from './components/ContagemRegressivaTile';
+import MuralTile from './components/MuralTile';
+import JogosView from './components/JogosView';
+import JogosTile from './components/JogosTile';
 import {
   formatarCaminhoImagem,
   PLACEHOLDER_PROFILE,
@@ -75,7 +79,11 @@ function HalloweenPlayer({
             onClick={onTogglePlayback}
             aria-label={isPlaying ? 'Pausar música' : 'Reproduzir música'}
           >
-            {isPlaying ? <VscDebugPause /> : <VscPlay />}
+            {isPlaying ? (
+              <img className="halloween-player__icon" width="96" height="96" src="https://img.icons8.com/windows/96/pause--v1.png" alt="pause--v1"/>
+            ) : (
+              <img className="halloween-player__icon" width="96" height="96" src="https://img.icons8.com/windows/96/play--v1.png" alt="play--v1"/>
+            )}
           </button>
           <button
             className="halloween-player__button"
@@ -83,7 +91,7 @@ function HalloweenPlayer({
             onClick={onNextTrack}
             aria-label="Avançar música"
           >
-            <VscChevronRight />
+            <img className="halloween-player__icon" width="96" height="96" src="https://img.icons8.com/windows/96/end.png" alt="end"/>
           </button>
         </div>
         <audio ref={audioRef} src={track.src} />
@@ -336,11 +344,17 @@ function App() {
                 onLogout={handleLogout}
               />
             </div>
+          ) : telaAtual === 'jogos' ? (
+            <div className="halloween-hub__content">
+              <JogosView
+                onBack={() => setTelaAtual('inicio')}
+              />
+            </div>
           ) : (
             <div className="metro-start-grid">
               {/* Tile 1: WhatsApp (2 colunas de largura, 2 unidades de altura - Lado Esquerdo) */}
               <a
-                className="metro-tile tile-small-2x2"
+                className="metro-tile tile-small-2x2 tile-whatsapp"
                 href="https://chat.whatsapp.com/BDC19peviuB0GBOlRKlDoh?s=cl&p=i&mlu=4&ilr=4"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -386,6 +400,12 @@ function App() {
               {/* Tile Evento ICS */}
               <DataEventoTile />
 
+              {/* Tile Contagem Regressiva: 4 colunas de largura, alinhado a esquerda */}
+              <ContagemRegressivaTile />
+
+              {/* Tile Jogos: 2 colunas de largura (ao lado da contagem) */}
+              <JogosTile onClick={() => setTelaAtual('jogos')} />
+
               {/* Card Escolha a Data: 6 colunas de largura */}
               <div className="tile-votacao-wrapper">
                 <VotacaoData
@@ -393,6 +413,9 @@ function App() {
                   onUserUpdate={setLoggedUser}
                 />
               </div>
+
+              {/* Tile Mural de Recados: 6 colunas de largura */}
+              <MuralTile usuarioLogado={loggedUser} />
 
               {/* Tile Convidados: 6 colunas de largura, 1 unidade de altura */}
               <button
@@ -438,20 +461,7 @@ function App() {
                 onClick={handleCopiarEndereco}
               >
                 <div className="tile-icon">
-                  <svg
-                    width="38"
-                    height="38"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.35"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <rect x="9" y="9" width="13" height="13" />
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                  </svg>
+                  <img width="96" height="96" src="https://img.icons8.com/windows/96/copy.png" alt="copy" className="tile-icon-img" />
                 </div>
                 <span className="tile-label">{copiado ? 'copiado!' : 'copiar endereço'}</span>
               </button>
@@ -464,20 +474,7 @@ function App() {
                 rel="noopener noreferrer"
               >
                 <div className="tile-icon">
-                  <svg
-                    width="38"
-                    height="38"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.35"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
+                  <img width="96" height="96" src="https://img.icons8.com/windows/96/marker.png" alt="marker" className="tile-icon-img" />
                 </div>
                 <span className="tile-label">abrir mapa</span>
               </a>

@@ -1,0 +1,197 @@
+.jogos-view-container {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  width: 100vw;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+  padding: 1.25rem 1.25rem 0;
+  color: #fff;
+  background: #000;
+}
+
+.jogos-header {
+  display: flex;
+  flex: 0 0 auto;
+  width: min(100%, 42rem);
+  margin: 0 auto 32px;
+  align-items: center;
+  gap: 16px;
+}
+
+.jogos-back-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
+  filter: invert(1);
+  margin-top: 1.4rem;
+  /* Aligned visually with x-height of title */
+}
+
+.jogos-back-btn img {
+  width: clamp(2.5rem, 10vw, 4rem);
+  height: auto;
+}
+
+.jogos-back-btn:active {
+  transform: scale(0.9);
+}
+
+.jogos-title {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(3.75rem, 15vw, 5rem);
+  font-weight: 200;
+  letter-spacing: -0.08em;
+  line-height: 0.95;
+  text-transform: lowercase;
+}
+
+.jogos-cards-list {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 0 7rem;
+  scrollbar-width: thin;
+  width: min(100%, 42rem);
+  margin: 0 auto;
+}
+
+.jogos-cards-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.jogos-cards-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.jogos-cards-list::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.jogo-card {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.05); /* Solid dark grey with slight white tint */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 24px;
+  gap: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+/* Um detalhe visual: uma borda colorida grossa na esquerda pra dar identidade */
+.jogo-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+}
+
+.card-karaoke::before { background-color: #1DB954; }
+.card-justdance::before { background-color: #E1306C; } /* Rosa neon puxado pro Just Dance */
+.card-bingo::before { background-color: #F06000; } /* Laranja Halloween */
+
+.jogo-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.jogo-info h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: #ffffff;
+  text-transform: lowercase;
+}
+
+.jogo-info p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 300;
+  color: #bbbbbb;
+  line-height: 1.5;
+}
+
+.jogo-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-decoration: none;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  text-transform: lowercase;
+  padding: 14px 20px;
+  border: 2px solid transparent;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jogo-btn img {
+  width: 24px;
+  height: 24px;
+  filter: invert(1);
+}
+
+/* Botão Karaoke */
+.btn-spotify {
+  background-color: transparent;
+  border-color: #1DB954;
+  color: #1DB954;
+}
+
+.btn-spotify img { filter: none; }
+
+.btn-spotify:hover {
+  background-color: #1DB954;
+  color: #000;
+}
+.btn-spotify:hover img { filter: brightness(0); }
+
+/* Botão Just Dance */
+.btn-justdance {
+  background-color: transparent;
+  border-color: #E1306C;
+  color: #E1306C;
+}
+
+.btn-justdance img { filter: none; }
+
+.btn-justdance:hover {
+  background-color: #E1306C;
+  color: #fff;
+}
+.btn-justdance:hover img { filter: brightness(0) invert(1); }
+
+/* Botão Bingo (Informativo) */
+.btn-bingo {
+  background-color: transparent;
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #888;
+  cursor: default;
+}
+
+.btn-bingo img { filter: invert(0.5); }
