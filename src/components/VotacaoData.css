@@ -41,7 +41,9 @@
 .rsvp-subtitle {
   margin: 0;
   color: #aaaaaa;
-  font-size: 1.1rem;`r`n  font-weight: 300;`r`n  line-height: 1.5;
+  font-size: 1.1rem;
+  font-weight: 300;
+  line-height: 1.5;
 }
 
 .rsvp-subtitle strong {
