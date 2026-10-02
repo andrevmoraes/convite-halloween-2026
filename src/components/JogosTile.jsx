@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const imagePaths = [
   '/midia/tiles/bingo.png',
@@ -19,7 +19,7 @@ export default function JogosTile({ onClick }) {
       setFlipCount((c) => c + 1);
       innerTimeoutId = setTimeout(() => {
         setContentCount((c) => c + 1);
-      }, 300);
+      }, 620);
     }, 5500);
     return () => {
       clearInterval(intervalId);
@@ -92,13 +92,14 @@ export default function JogosTile({ onClick }) {
           position: 'relative',
           transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
           transformStyle: 'preserve-3d',
+          willChange: 'transform',
           transform: `rotateX(${flipCount * 180}deg)`,
         }}
       >
-        <div style={{ position: 'absolute', width: '100%', height: '100%', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+        <div style={{ position: 'absolute', width: '100%', height: '100%', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'translateZ(0)' }}>
           {renderFace(indexA)}
         </div>
-        <div style={{ position: 'absolute', width: '100%', height: '100%', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'rotateX(180deg)' }}>
+        <div style={{ position: 'absolute', width: '100%', height: '100%', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'rotateX(180deg) translateZ(0)' }}>
           {renderFace(indexB)}
         </div>
       </div>
