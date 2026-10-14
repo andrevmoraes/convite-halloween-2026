@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
 import { formatarCaminhoImagem } from '../lib/formatarCaminhoImagem';
+import { processarImagem } from '../lib/processarImagem';
 import './EditarPerfil.css';
 
 const panoramaVariants = {
@@ -47,11 +48,18 @@ export default function EditarPerfil({ usuarioLogado, onUserUpdate, onBack, onLo
     setFormData((current) => ({ ...current, genero }));
   }
 
-  function handleFotoChange(event) {
+  async function handleFotoChange(event) {
     const file = event.target.files[0];
-    if (file) {
-      setFotoArquivo(file);
-      setFotoPreview(URL.createObjectURL(file));
+    if (!file) return;
+
+    try {
+      const processedFile = await processarImagem(file, { maxDimension: 800 });
+      setFotoArquivo(processedFile);
+      setFotoPreview(URL.createObjectURL(processedFile));
+      setFormError('');
+    } catch (error) {
+      console.error('Erro ao processar a foto do perfil:', error);
+      setFormError('não foi possível processar essa imagem.');
     }
   }
 
@@ -71,12 +79,11 @@ export default function EditarPerfil({ usuarioLogado, onUserUpdate, onBack, onLo
       let fotoUrlFinal = usuarioLogado?.foto_url;
 
       if (fotoArquivo) {
-        const fileExt = fotoArquivo.name.split('.').pop();
-        const fileName = `${usuarioLogado.id}.${fileExt}`;
+        const fileName = `${usuarioLogado.id}.webp`;
         
         const { error: uploadError } = await supabase.storage
           .from('avatars')
-          .upload(fileName, fotoArquivo, { upsert: true });
+          .upload(fileName, fotoArquivo, { contentType: 'image/webp', upsert: true });
 
         if (uploadError) {
           console.error('Erro ao fazer upload da foto:', uploadError);

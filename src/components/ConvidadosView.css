@@ -261,6 +261,15 @@
   background: #000;
 }
 
+.convidados-view__modal-backdrop .editar-perfil-view-container {
+  position: relative;
+  min-height: auto;
+}
+
+.convidados-view__modal-backdrop .editar-perfil-view-container::before {
+  display: none;
+}
+
 .convidados-view__modal h2 {
   margin: 0 0 1.5rem;
   font-size: 2rem;

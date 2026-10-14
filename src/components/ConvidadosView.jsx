@@ -5,6 +5,7 @@ import {
   formatarCaminhoImagem,
   PLACEHOLDER_PROFILE,
 } from '../lib/formatarCaminhoImagem';
+import { processarImagem } from '../lib/processarImagem';
 import EditarPerfil from './EditarPerfil';
 import VotacaoData from './VotacaoData';
 import './ConvidadosView.css';
@@ -111,11 +112,18 @@ export default function ConvidadosView({ anfitriao, onBack }) {
     }));
   }
 
-  function handleFotoChange(event) {
+  async function handleFotoChange(event) {
     const file = event.target.files[0];
-    if (file) {
-      setFotoArquivo(file);
-      setFotoPreview(URL.createObjectURL(file));
+    if (!file) return;
+
+    try {
+      const processedFile = await processarImagem(file, { maxDimension: 800 });
+      setFotoArquivo(processedFile);
+      setFotoPreview(URL.createObjectURL(processedFile));
+      setFormError('');
+    } catch (error) {
+      console.error('Erro ao processar a foto do convidado:', error);
+      setFormError('não foi possível processar essa imagem.');
     }
   }
 
@@ -194,12 +202,11 @@ export default function ConvidadosView({ anfitriao, onBack }) {
       }
 
       if (fotoArquivo) {
-        const fileExt = fotoArquivo.name.split('.').pop();
-        const fileName = `${data.id}.${fileExt}`;
+        const fileName = `${data.id}.webp`;
         
         const { error: uploadError } = await supabase.storage
           .from('avatars')
-          .upload(fileName, fotoArquivo, { upsert: true });
+          .upload(fileName, fotoArquivo, { contentType: 'image/webp', upsert: true });
 
         if (uploadError) {
           console.error('Erro ao fazer upload da foto:', uploadError);
@@ -608,7 +615,7 @@ export default function ConvidadosView({ anfitriao, onBack }) {
             <div
               className="convidados-view__modal-backdrop"
               role="presentation"
-              style={{ zIndex: 10, display: 'block', overflowY: 'auto', padding: '2rem 1rem 12rem 1rem' }}
+              style={{ zIndex: 30, display: 'block', overflowY: 'auto', padding: '2rem 1rem 12rem 1rem' }}
               onMouseDown={(event) => {
                 if (event.target === event.currentTarget) {
                   setEditingGuest(null);
@@ -630,6 +637,7 @@ export default function ConvidadosView({ anfitriao, onBack }) {
                   <VotacaoData
                     usuarioLogado={editingGuest}
                     skipLocalStorage={true}
+                    adminMode={isAdmin}
                     onUserUpdate={(updatedGuest) => {
                       setGuests((currentGuests) =>
                         currentGuests.map((g) => (g.id === updatedGuest.id ? updatedGuest : g)).sort((a, b) => (a.nome || '').localeCompare(b.nome || '', 'pt-BR'))

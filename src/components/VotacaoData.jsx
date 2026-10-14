@@ -15,13 +15,19 @@ function parseRSVP(value) {
   return null;
 }
 
-export default function VotacaoData({ usuarioLogado, onUserUpdate, skipLocalStorage = false }) {
+export default function VotacaoData({
+  usuarioLogado,
+  onUserUpdate,
+  skipLocalStorage = false,
+  adminMode = false,
+}) {
   const [user, setUser] = useState(usuarioLogado);
   const [errorMessage, setErrorMessage] = useState('');
 
   const rsvpInit = parseRSVP(usuarioLogado?.data_votada) || {};
   const [presenca, setPresenca] = useState(rsvpInit.presenca || null);
   const [contribuicao, setContribuicao] = useState(rsvpInit.contribuicao || null);
+  const [pixPago, setPixPago] = useState(rsvpInit.pix_pago === true);
 
   const [acompanhantes, setAcompanhantes] = useState(rsvpInit.acompanhantes || '');
   const [comida, setComida] = useState(rsvpInit.comida || '');
@@ -36,6 +42,7 @@ export default function VotacaoData({ usuarioLogado, onUserUpdate, skipLocalStor
   const headerRef = useRef(null);
 
   const [isCollapsed, setIsCollapsed] = useState(() => {
+    if (adminMode) return false;
     return rsvpInit.presenca === 'nao' || (rsvpInit.presenca === 'sim' && rsvpInit.contribuicao !== null);
   });
 
@@ -46,6 +53,7 @@ export default function VotacaoData({ usuarioLogado, onUserUpdate, skipLocalStor
       setPresenca(rsvp.presenca || null);
       setAcompanhantes(rsvp.acompanhantes || '');
       setContribuicao(rsvp.contribuicao || null);
+      setPixPago(rsvp.pix_pago === true);
       setComida(rsvp.comida || '');
       setAcompanhantesInput(rsvp.acompanhantes || '');
       setComidaInput(rsvp.comida || '');
@@ -79,7 +87,8 @@ export default function VotacaoData({ usuarioLogado, onUserUpdate, skipLocalStor
         presenca,
         acompanhantes: presenca === 'sim' ? acompanhantes : '',
         contribuicao: presenca === 'sim' ? contribuicao : null,
-        comida: presenca === 'sim' && contribuicao === 'prato' ? comida : ''
+        comida: presenca === 'sim' && contribuicao === 'prato' ? comida : '',
+        pix_pago: pixPago,
       };
 
       const serialized = JSON.stringify(rsvpData);
@@ -104,7 +113,7 @@ export default function VotacaoData({ usuarioLogado, onUserUpdate, skipLocalStor
 
     doSave();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [presenca, acompanhantes, contribuicao, comida]);
+  }, [presenca, acompanhantes, contribuicao, comida, pixPago]);
 
   const togglePresenca = (val) => {
     setPresenca(prev => {
@@ -124,6 +133,10 @@ export default function VotacaoData({ usuarioLogado, onUserUpdate, skipLocalStor
       }
       return newVal;
     });
+  };
+
+  const togglePixPago = (val) => {
+    setPixPago(val);
   };
 
   const handleCopyPix = () => {
@@ -240,6 +253,27 @@ export default function VotacaoData({ usuarioLogado, onUserUpdate, skipLocalStor
 
                 {contribuicao === 'pix' && (
                   <div className="rsvp-field rsvp-pix-container" ref={detalhesRef} style={{ marginTop: 16 }}>
+                    {adminMode && (
+                      <>
+                        <label>status do pagamento</label>
+                        <div className="rsvp-options rsvp-options--small">
+                          <button
+                            type="button"
+                            className={`rsvp-tile rsvp-tile--small ${!pixPago ? 'rsvp-tile--selected' : ''}`}
+                            onClick={() => togglePixPago(false)}
+                          >
+                            não pago
+                          </button>
+                          <button
+                            type="button"
+                            className={`rsvp-tile rsvp-tile--small ${pixPago ? 'rsvp-tile--selected' : ''}`}
+                            onClick={() => togglePixPago(true)}
+                          >
+                            pago
+                          </button>
+                        </div>
+                      </>
+                    )}
                     <div className="rsvp-options rsvp-options--small">
                       <button
                         className="rsvp-tile rsvp-tile--small rsvp-tile--action"

@@ -142,6 +142,16 @@
   overflow-wrap: anywhere;
 }
 
+.tile-me__support {
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.78);
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.25px;
+  line-height: 1.2;
+}
+
 .tile-me__photo-container {
   width: calc(50% - 4px);
   height: 100%;
@@ -441,13 +451,9 @@
 
 .tile-whatsapp {
   background-color: #25D366 !important;
-  --glow-color: rgba(18, 140, 126, 0.8);
-  --glow-color-dim: rgba(18, 140, 126, 0.5);
-  animation: dynamicGlow 3s ease-in-out infinite;
   z-index: 1;
 }
 
 .tile-jogos {
   background-color: #107c10 !important;
 }
-

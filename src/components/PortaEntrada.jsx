@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
+import { isConvidadoConfirmado } from '../lib/isConvidadoConfirmado';
 import './PortaEntrada.css';
 
 const BACKGROUND_IMAGE =
@@ -56,6 +57,7 @@ export default function PortaEntrada({ onConfirm, onStartAudio }) {
   const [pin, setPin] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [shakeKey, setShakeKey] = useState(0);
+  const [accessMessage, setAccessMessage] = useState('');
   const openingTimeoutRef = useRef(null);
 
   useEffect(() => () => {
@@ -74,6 +76,7 @@ export default function PortaEntrada({ onConfirm, onStartAudio }) {
   }, [isOpen]);
 
   const handleDigit = useCallback((digit) => {
+    setAccessMessage('');
     setPin((currentPin) => {
       if (currentPin.length >= 11) {
         return currentPin;
@@ -86,6 +89,7 @@ export default function PortaEntrada({ onConfirm, onStartAudio }) {
 
   const handleClear = useCallback(() => {
     setPin('');
+    setAccessMessage('');
   }, []);
 
   const handleConfirm = useCallback(async () => {
@@ -132,6 +136,14 @@ export default function PortaEntrada({ onConfirm, onStartAudio }) {
       console.warn('Acesso negado: nenhum convidado corresponde ao telefone.', {
         digitCount: pin.length,
       });
+      setPin('');
+      setShakeKey((key) => key + 1);
+      return;
+    }
+
+    if (!isConvidadoConfirmado(userData)) {
+      const guestName = (userData.nome || 'convidado').toLowerCase();
+      setAccessMessage(`olá, ${guestName}. sua presença não foi confirmada.`);
       setPin('');
       setShakeKey((key) => key + 1);
       return;
@@ -201,6 +213,11 @@ export default function PortaEntrada({ onConfirm, onStartAudio }) {
             <div className="porta-entrada__display" aria-live="polite">
               {formatPhoneNumber(pin) || '—'}
             </div>
+            {accessMessage && (
+              <p className="porta-entrada__access-message" role="alert">
+                {accessMessage}
+              </p>
+            )}
 
             <div className="porta-entrada__keypad">
               {keypadRows.flat().map((key) => {

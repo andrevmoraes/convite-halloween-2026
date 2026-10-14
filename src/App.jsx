@@ -4,12 +4,13 @@ import { motion, MotionConfig } from 'framer-motion';
 import ConvidadosView from './components/ConvidadosView';
 import EditarPerfil from './components/EditarPerfil';
 import PortaEntrada from './components/PortaEntrada';
-import VotacaoData from './components/VotacaoData';
 import DataEventoTile from './components/DataEventoTile';
 import ContagemRegressivaTile from './components/ContagemRegressivaTile';
 import MuralTile from './components/MuralTile';
+import MuralDisplay from './components/MuralDisplay';
 import JogosView from './components/JogosView';
 import JogosTile from './components/JogosTile';
+import { isConvidadoConfirmado } from './lib/isConvidadoConfirmado';
 import {
   formatarCaminhoImagem,
   PLACEHOLDER_PROFILE,
@@ -32,7 +33,7 @@ function readStoredUser() {
   try {
     const userData = JSON.parse(storedUser);
 
-    if (userData && typeof userData === 'object') {
+    if (userData && typeof userData === 'object' && isConvidadoConfirmado(userData)) {
       return userData;
     }
   } catch (error) {
@@ -123,7 +124,7 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [loggedUser, setLoggedUser] = useState(() => readStoredUser());
   const [telaAtual, setTelaAtual] = useState('inicio');
-  const isValidated = Boolean(loggedUser);
+  const isValidated = Boolean(loggedUser && isConvidadoConfirmado(loggedUser));
   const [message, setMessage] = useState('');
   const [copiado, setCopiado] = useState(false);
   const copiadoTimer = useRef(null);
@@ -134,6 +135,8 @@ function App() {
   const linkMapa = isApple
     ? `https://maps.apple.com/?q=${queryEncoded}`
     : `https://www.google.com/maps/search/?api=1&query=${queryEncoded}`;
+
+  const isMuralDisplay = window.location.pathname === '/mural-display';
 
 
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
@@ -228,9 +231,12 @@ function App() {
         return;
       }
 
-      if (isActive && data) {
+      if (isActive && data && isConvidadoConfirmado(data)) {
         setLoggedUser(data);
         localStorage.setItem('halloween_user', JSON.stringify(data));
+      } else if (isActive) {
+        localStorage.removeItem('halloween_user');
+        setLoggedUser(null);
       }
     }
 
@@ -328,6 +334,10 @@ function App() {
     setCurrentTrack((track) => (track + 1) % playlist.length);
   }, [playlist.length]);
 
+  if (isMuralDisplay) {
+    return <MuralDisplay />;
+  }
+
   function handleConfirm(userData) {
     localStorage.setItem('halloween_user', JSON.stringify(userData));
     setLoggedUser(userData);
@@ -403,6 +413,7 @@ function App() {
                   <span className="tile-me__name">
                     {(loggedUser?.nome || 'convidado').toLowerCase()}
                   </span>
+                  <span className="tile-me__support">toque para editar seu perfil</span>
                 </div>
                 <div className="tile-me__photo-container">
                   <img
@@ -425,14 +436,6 @@ function App() {
 
               {/* Tile Jogos: 2 colunas de largura (ao lado da contagem) */}
               <JogosTile onClick={() => setTelaAtual('jogos')} />
-
-              {/* Card Escolha a Data: 6 colunas de largura */}
-              <div className="tile-votacao-wrapper">
-                <VotacaoData
-                  usuarioLogado={loggedUser}
-                  onUserUpdate={setLoggedUser}
-                />
-              </div>
 
               {/* Tile Mural de Recados: 6 colunas de largura */}
               <MuralTile usuarioLogado={loggedUser} />
