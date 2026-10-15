@@ -135,6 +135,7 @@
 }
 
 .card-karaoke::before { background-color: #1DB954; }
+.card-after::before { background-color: var(--accent-color, #F06000); }
 .card-justdance::before { background-color: #E1306C; } /* Rosa neon puxado pro Just Dance */
 .card-bingo::before { background-color: #F06000; } /* Laranja Halloween */
 
@@ -183,6 +184,33 @@
   filter: invert(1);
 }
 
+.after-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.after-actions .jogo-btn {
+  min-width: 0;
+  padding: 14px 10px;
+  gap: 8px;
+  font-size: clamp(0.78rem, 2.8vw, 1rem);
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+
+.btn-after-instagram,
+.btn-after-ticket {
+  background-color: var(--accent-color, #F06000);
+  border-color: var(--accent-color, #F06000);
+  color: #fff;
+}
+
+.btn-after-instagram:hover,
+.btn-after-ticket:hover {
+  filter: brightness(1.12);
+}
+
 /* Botão Karaoke - sempre preenchido */
 .btn-spotify {
   background-color: #1DB954;
@@ -210,3 +238,25 @@
 }
 
 .btn-bingo img { filter: invert(0.5); }
+
+.mural-display-link {
+  display: block;
+  margin: 8px 0 0;
+  padding: 16px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  color: #f1f1ed;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-decoration: none;
+  text-transform: lowercase;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.mural-display-link:hover,
+.mural-display-link:focus-visible {
+  border-color: var(--accent-color, #F06000);
+  background: rgba(240, 96, 0, 0.18);
+}

@@ -1,5 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, MotionConfig } from 'framer-motion';
+import {
+  Beer,
+  CarFront,
+  Check,
+  Clock,
+  Flame,
+  Ghost,
+  Gift,
+  MapPin,
+  Martini,
+} from 'lucide-react';
 
 import ConvidadosView from './components/ConvidadosView';
 import EditarPerfil from './components/EditarPerfil';
@@ -22,6 +33,148 @@ const PLACEHOLDER_COVER =
   '/midia/imagens/sabina-music-rich-OJy0JHnoUZQ-unsplash.jpg';
 const ENDERECO_EVENTO =
   'Av. Coronel João Leite, 300 - Centro, Mogi Mirim - SP, 13800-034';
+const REGRAS_VISUALIZADAS_KEY = 'halloween_regras_visualizadas';
+
+const regrasDaFesta = [
+  {
+    titulo: 'Confirmação',
+    texto: 'Para alinharmos as quantidades certinhas, quem ainda não contribuiu só me dá um toque confirmando!',
+    icone: Check,
+  },
+  {
+    titulo: 'Horários',
+    texto: 'Começamos 17h! Quem quiser chegar antes para ajudar na decoração será super bem-vindo (se tiver itens temáticos em casa, pode trazer!).\nÀs 21h45 em ponto precisamos encerrar para entregar o salão.',
+    icone: Clock,
+  },
+  {
+    titulo: 'After',
+    texto: 'A noite não acaba cedo!',
+    icone: MapPin,
+  },
+  {
+    titulo: 'Fantasia',
+    texto: 'Seguindo a tradição do ano passado, venha fantasiado! E dessa vez vamos ter concurso para eleger a melhor fantasia da noite!',
+    icone: Ghost,
+  },
+  {
+    titulo: 'Bingo Comunista',
+    texto: 'Bora desapegar! A taxa de inscrição é algum item da sua casa que você não usa mais. Rodadas bônus com prêmio nível produtinhos Granado!',
+    icone: Gift,
+  },
+  {
+    titulo: 'Avisos importantes',
+    texto: '1. Minha mãe estará presente.\n2. Evite fumar no espaço da festa, dê um pulinho mais afastado para mantermos o clima 100%',
+    icone: Flame,
+  },
+  {
+    titulo: 'Comidas e bebidas',
+    texto: 'Comidas e bebidas não alcoólicas estão garantidas com a contribuição de vocês! Para quem for beber álcool, traga o que for consumir. Temos geladeira, mas quem preferir trazer cooler fica à vontade.',
+    icone: Martini,
+  },
+  {
+    titulo: 'Copos',
+    texto: 'Teremos copos descartáveis, mas quem quiser trazer seu copo térmico ou caneca de casa é super bem-vindo!',
+    icone: Beer,
+  },
+  {
+    titulo: 'Transporte',
+    texto: 'Para todo mundo aproveitar com segurança, se for beber, priorize carona ou vá e volte de Uber!',
+    icone: CarFront,
+  },
+];
+
+function RegrasModal({ onClose }) {
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  return (
+    <div
+      className="regras-modal"
+      role="presentation"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <section
+        className="regras-modal__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="regras-modal-title"
+      >
+        <button
+          className="regras-modal__close"
+          type="button"
+          onClick={onClose}
+          aria-label="Fechar regras da festa"
+        >
+          ×
+        </button>
+        <p className="regras-modal__eyebrow">antes de começar</p>
+        <h2 id="regras-modal-title">informações</h2>
+        <div className="regras-modal__content">
+          {regrasDaFesta
+            .filter((regra) => regra.titulo !== 'Avisos importantes')
+            .map((regra) => (
+            <div
+              className={`regras-modal__item${
+                regra.titulo === 'Avisos importantes'
+                  ? ' regras-modal__item--important'
+                  : ''
+              }`}
+              key={regra.titulo}
+            >
+              <div className="regras-modal__icon" aria-hidden="true">
+                <regra.icone size={28} strokeWidth={1.5} />
+              </div>
+              <div className="regras-modal__item-content">
+                <h3>{regra.titulo}</h3>
+                <p>
+                  {regra.titulo === 'After' ? (
+                    <>
+                      {regra.texto} Às 21h45 recomendo um esquenta na praça e
+                      depois{' '}
+                      <a
+                        href="https://www.instagram.com/profetapub/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Profeta Pub (@profetapub)
+                      </a>
+                      . Se você vai nessa com a gente, lembre de já{' '}
+                      <a
+                        href="https://www.sympla.com.br/evento/rebola-raba-djs-lavs-kohuru-rezenha-dos-djs/3615318"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        garantir seu ingresso
+                      </a>
+                      !
+                    </>
+                  ) : (
+                    regra.texto
+                  )}
+                </p>
+              </div>
+            </div>
+            ))}
+        </div>
+        <button className="regras-modal__confirm" type="button" onClick={onClose}>
+          entendi
+        </button>
+      </section>
+    </div>
+  );
+}
 
 function readStoredUser() {
   const storedUser = localStorage.getItem('halloween_user');
@@ -124,6 +277,11 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [loggedUser, setLoggedUser] = useState(() => readStoredUser());
   const [telaAtual, setTelaAtual] = useState('inicio');
+  const [isRegrasOpen, setIsRegrasOpen] = useState(
+    () =>
+      Boolean(readStoredUser()) &&
+      localStorage.getItem(REGRAS_VISUALIZADAS_KEY) !== 'true',
+  );
   const isValidated = Boolean(loggedUser && isConvidadoConfirmado(loggedUser));
   const [message, setMessage] = useState('');
   const [copiado, setCopiado] = useState(false);
@@ -184,7 +342,6 @@ function App() {
     }
   }
 
-  const usuarioLogado = loggedUser;
   const saudacao = 'olá,';
 
   function handleLogout() {
@@ -334,15 +491,27 @@ function App() {
     setCurrentTrack((track) => (track + 1) % playlist.length);
   }, [playlist.length]);
 
-  if (isMuralDisplay) {
-    return <MuralDisplay />;
-  }
-
   function handleConfirm(userData) {
     localStorage.setItem('halloween_user', JSON.stringify(userData));
     setLoggedUser(userData);
+    setIsRegrasOpen(
+      localStorage.getItem(REGRAS_VISUALIZADAS_KEY) !== 'true',
+    );
     setMessage('');
     return userData;
+  }
+
+  const closeRegras = useCallback(() => {
+    localStorage.setItem(REGRAS_VISUALIZADAS_KEY, 'true');
+    setIsRegrasOpen(false);
+  }, []);
+
+  const openRegras = useCallback(() => {
+    setIsRegrasOpen(true);
+  }, []);
+
+  if (isMuralDisplay) {
+    return <MuralDisplay />;
   }
 
   return (
@@ -506,6 +675,9 @@ function App() {
               </a>
             </div>
           )}
+          <button className="regras-button" type="button" onClick={openRegras}>
+            ver regras da festa
+          </button>
         </motion.main>
       )}
       {!isValidated && message && <p className="app-message">{message}</p>}
@@ -518,6 +690,7 @@ function App() {
         onNextTrack={nextTrack}
         isVisible={isValidated && !isKeyboardOpen}
       />
+      {isValidated && isRegrasOpen && <RegrasModal onClose={closeRegras} />}
     </MotionConfig>
   );
 }

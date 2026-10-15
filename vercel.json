@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/mural-display",
+      "destination": "/index.html"
+    }
+  ]
+}
