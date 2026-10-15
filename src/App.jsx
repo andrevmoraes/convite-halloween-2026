@@ -117,47 +117,46 @@ function RegrasModal({ onClose }) {
           {regrasDaFesta
             .filter((regra) => regra.titulo !== 'Avisos importantes')
             .map((regra) => (
-            <div
-              className={`regras-modal__item${
-                regra.titulo === 'Avisos importantes'
-                  ? ' regras-modal__item--important'
-                  : ''
-              }`}
-              key={regra.titulo}
-            >
-              <div className="regras-modal__icon" aria-hidden="true">
-                <regra.icone size={28} strokeWidth={1.5} />
+              <div
+                className={`regras-modal__item${regra.titulo === 'Avisos importantes'
+                    ? ' regras-modal__item--important'
+                    : ''
+                  }`}
+                key={regra.titulo}
+              >
+                <div className="regras-modal__icon" aria-hidden="true">
+                  <regra.icone size={28} strokeWidth={1.5} />
+                </div>
+                <div className="regras-modal__item-content">
+                  <h3>{regra.titulo}</h3>
+                  <p>
+                    {regra.titulo === 'After' ? (
+                      <>
+                        {regra.texto} Às 21h45 recomendo um esquenta na praça e
+                        depois{' '}
+                        <a
+                          href="https://www.instagram.com/profetapub/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Profeta Pub (@profetapub)
+                        </a>
+                        . Se você vai nessa com a gente, lembre de já{' '}
+                        <a
+                          href="https://www.sympla.com.br/evento/rebola-raba-djs-lavs-kohuru-rezenha-dos-djs/3615318"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          garantir seu ingresso
+                        </a>
+                        !
+                      </>
+                    ) : (
+                      regra.texto
+                    )}
+                  </p>
+                </div>
               </div>
-              <div className="regras-modal__item-content">
-                <h3>{regra.titulo}</h3>
-                <p>
-                  {regra.titulo === 'After' ? (
-                    <>
-                      {regra.texto} Às 21h45 recomendo um esquenta na praça e
-                      depois{' '}
-                      <a
-                        href="https://www.instagram.com/profetapub/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Profeta Pub (@profetapub)
-                      </a>
-                      . Se você vai nessa com a gente, lembre de já{' '}
-                      <a
-                        href="https://www.sympla.com.br/evento/rebola-raba-djs-lavs-kohuru-rezenha-dos-djs/3615318"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        garantir seu ingresso
-                      </a>
-                      !
-                    </>
-                  ) : (
-                    regra.texto
-                  )}
-                </p>
-              </div>
-            </div>
             ))}
         </div>
         <button className="regras-modal__confirm" type="button" onClick={onClose}>
@@ -226,9 +225,9 @@ function HalloweenPlayer({
             aria-label={isPlaying ? 'Pausar música' : 'Reproduzir música'}
           >
             {isPlaying ? (
-              <img className="halloween-player__icon" width="96" height="96" src="https://img.icons8.com/windows/96/pause--v1.png" alt="pause--v1"/>
+              <img className="halloween-player__icon" width="96" height="96" src="https://img.icons8.com/windows/96/pause--v1.png" alt="pause--v1" />
             ) : (
-              <img className="halloween-player__icon" width="96" height="96" src="https://img.icons8.com/windows/96/play--v1.png" alt="play--v1"/>
+              <img className="halloween-player__icon" width="96" height="96" src="https://img.icons8.com/windows/96/play--v1.png" alt="play--v1" />
             )}
           </button>
           <button
@@ -237,7 +236,7 @@ function HalloweenPlayer({
             onClick={onNextTrack}
             aria-label="Avançar música"
           >
-            <img className="halloween-player__icon" width="96" height="96" src="https://img.icons8.com/windows/96/end.png" alt="end"/>
+            <img className="halloween-player__icon" width="96" height="96" src="https://img.icons8.com/windows/96/end.png" alt="end" />
           </button>
         </div>
         <audio ref={audioRef} src={track.src} />
@@ -311,9 +310,9 @@ function App() {
     return () => {
       window.removeEventListener('focusin', handleFocus);
       window.removeEventListener('focusout', handleBlur);
-    if (copiadoTimer.current !== null) {
-      clearTimeout(copiadoTimer.current);
-    }
+      if (copiadoTimer.current !== null) {
+        clearTimeout(copiadoTimer.current);
+      }
     };
   }, []);
 
@@ -344,6 +343,7 @@ function App() {
     }
 
     localStorage.removeItem('halloween_user');
+    localStorage.removeItem(REGRAS_VISUALIZADAS_KEY);
     setLoggedUser(null);
     setTelaAtual('inicio');
   }
@@ -484,11 +484,10 @@ function App() {
   }, [playlist.length]);
 
   function handleConfirm(userData) {
+    localStorage.removeItem(REGRAS_VISUALIZADAS_KEY);
     localStorage.setItem('halloween_user', JSON.stringify(userData));
     setLoggedUser(userData);
-    setIsRegrasOpen(
-      localStorage.getItem(REGRAS_VISUALIZADAS_KEY) !== 'true',
-    );
+    setIsRegrasOpen(true);
     setMessage('');
     return userData;
   }
@@ -501,6 +500,22 @@ function App() {
   const openRegras = useCallback(() => {
     setIsRegrasOpen(true);
   }, []);
+
+  const normalizedUserName = (loggedUser?.nome || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+  const isAndre =
+    normalizedUserName.includes('andre') ||
+    String(loggedUser?.telefone || '').includes('997132723');
+
+  // O mural deve aparecer sempre para o André, e para os outros convidados apenas a partir do dia da festa (17 de Outubro)
+  const agora = new Date();
+  const isDiaDaFestaOuDepois =
+    (agora.getFullYear() === 2026 && agora.getMonth() === 9 && agora.getDate() >= 17) ||
+    agora.getFullYear() > 2026 ||
+    (agora.getFullYear() === 2026 && agora.getMonth() > 9);
+  const deveExibirMural = isAndre || isDiaDaFestaOuDepois;
 
   if (isMuralDisplay) {
     return <MuralDisplay />;
@@ -589,8 +604,13 @@ function App() {
                 </div>
               </section>
 
-              {/* Tile Evento ICS */}
+              {/* Tile Evento ICS (Agenda) */}
               <DataEventoTile />
+
+              {/* Botão Ver Informações da Festa */}
+              <button className="regras-button" type="button" onClick={openRegras}>
+                ver orientações da festa
+              </button>
 
               {/* Tile Contagem Regressiva: 4 colunas de largura, alinhado a esquerda */}
               <ContagemRegressivaTile />
@@ -598,8 +618,8 @@ function App() {
               {/* Tile Jogos: 2 colunas de largura (ao lado da contagem) */}
               <JogosTile onClick={() => setTelaAtual('jogos')} />
 
-              {/* Tile Mural de Recados: 6 colunas de largura */}
-              <MuralTile usuarioLogado={loggedUser} />
+              {/* Tile Mural de Recados: 6 colunas de largura (visível para André ou a partir do dia 17) */}
+              {deveExibirMural && <MuralTile usuarioLogado={loggedUser} />}
 
               {/* Tile Convidados: 6 colunas de largura, 1 unidade de altura */}
               <button
@@ -667,12 +687,10 @@ function App() {
               </a>
             </div>
           )}
-          <button className="regras-button" type="button" onClick={openRegras}>
-            ver regras da festa
-          </button>
         </motion.main>
       )}
       {!isValidated && message && <p className="app-message">{message}</p>}
+      {isValidated && isRegrasOpen && <RegrasModal onClose={closeRegras} />}
       <HalloweenPlayer
         audioRef={audioRef}
         playlist={playlist}
@@ -682,7 +700,6 @@ function App() {
         onNextTrack={nextTrack}
         isVisible={isValidated && !isKeyboardOpen}
       />
-      {isValidated && isRegrasOpen && <RegrasModal onClose={closeRegras} />}
     </MotionConfig>
   );
 }

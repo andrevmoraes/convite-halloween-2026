@@ -19,15 +19,60 @@
 
 .porta-entrada__background {
   z-index: -2;
-  background-position: center;
+  position: absolute;
+  inset: -60px;
+  background-position: center 45%;
   background-size: cover;
-  transform-origin: center;
+  transform-origin: center 45%;
+  transform: scale(1) translate3d(0, 0, 0);
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1), filter 1s ease;
+  will-change: transform;
+}
+
+/* Primeiro zoom: acontece ao tocar para entrar (ao abrir a fechadura / teclado de login) */
+.porta-entrada--open .porta-entrada__background {
+  transform: scale(1.36) translate3d(0, -14px, 0);
+  filter: blur(2px);
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1), filter 1s ease;
+}
+
+/* Checkpoint ao começar a digitar o telefone */
+.porta-entrada--open[data-pin-stage="typing"] .porta-entrada__background {
+  transform: scale(1.48) translate3d(0, -20px, 0);
+  filter: blur(2.5px);
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), filter 0.8s ease;
+}
+
+/* Checkpoint com telefone preenchido */
+.porta-entrada--open[data-pin-stage="complete"] .porta-entrada__background {
+  transform: scale(1.62) translate3d(0, -28px, 0);
+  filter: blur(3.5px);
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), filter 0.8s ease;
+}
+
+/* Checkpoint final: confirmação / entrada rápida através da porta */
+.porta-entrada--opening .porta-entrada__background {
+  animation: portaThroughDoor 1s cubic-bezier(0.2, 0, 0.2, 1) forwards !important;
+}
+
+@keyframes portaThroughDoor {
+  0% {
+    transform: scale(1.62) translate3d(0, -28px, 0);
+    opacity: 1;
+    filter: blur(3px);
+  }
+  100% {
+    transform: scale(5.8) translate3d(0, -70px, 0);
+    opacity: 0;
+    filter: blur(14px);
+  }
 }
 
 .porta-entrada__shade {
   z-index: -1;
   background: rgba(7, 8, 8, 0.35);
   pointer-events: none;
+  transition: background-color 0.8s ease;
 }
 
 .porta-entrada--open .porta-entrada__shade {

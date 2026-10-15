@@ -153,25 +153,21 @@ export default function PortaEntrada({ onConfirm, onStartAudio }) {
     onStartAudio?.();
     openingTimeoutRef.current = window.setTimeout(() => {
       onConfirm(userData);
-    }, 1500);
+    }, 1000);
   }, [isLoading, isOpening, onConfirm, onStartAudio, pin]);
 
+  const pinStage = pin.length >= 10 ? 'complete' : pin.length > 0 ? 'typing' : 'initial';
+
   return (
-    <main className={`porta-entrada ${isOpen ? 'porta-entrada--open' : ''}`}>
-      <motion.div
+    <main
+      className={`porta-entrada ${isOpen ? 'porta-entrada--open' : ''} ${
+        isOpening ? 'porta-entrada--opening' : ''
+      }`}
+      data-pin-stage={pinStage}
+    >
+      <div
         aria-hidden="true"
         className="porta-entrada__background"
-        initial={{ scale: 1, filter: 'blur(0px)' }}
-        animate={{
-          scale: isOpening ? 4.5 : isOpen ? 1.65 : 1,
-          filter: isOpening || isOpen ? 'blur(5px)' : 'blur(0px)',
-          opacity: isOpening ? 0 : 1,
-        }}
-        transition={
-          isOpening
-            ? { duration: 1.5, ease: 'easeInOut' }
-            : { duration: 1.8, ease: [0.22, 1, 0.36, 1] }
-        }
         style={{ backgroundImage: `url("${BACKGROUND_IMAGE}")` }}
       />
 

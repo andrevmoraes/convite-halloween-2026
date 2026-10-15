@@ -1,6 +1,10 @@
+/* ============================================================
+   MURAL TILE - ESTILO METRO / WINDOWS PHONE
+   Formato de Stories Verticais (9:16)
+   ============================================================ */
+
 .mural-tile {
   grid-column: span 6;
-  height: clamp(400px, 72cqw, 560px);
   display: flex;
   flex-direction: column;
   background-color: rgba(0, 0, 0, 0.65);
@@ -9,55 +13,29 @@
   border-radius: 0;
   overflow: hidden;
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* Header Limpo & Tipográfico */
 .mural-header {
-  padding: 20px 16px;
-  background-color: transparent;
+  padding: 16px 18px 10px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
+  align-items: baseline;
+  background: transparent;
 }
 
-.mural-whatsapp-btn {
+.mural-header__title-group {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  background-color: transparent;
-  border: 1px solid #25D366;
-  color: #25D366;
-  text-decoration: none;
-  padding: 4px 10px;
-  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
-  font-size: 0.8rem;
-  font-weight: 300;
-  text-transform: lowercase;
-  transition: opacity 0.2s ease;
-  white-space: nowrap;
-}
-
-.mural-whatsapp-btn img {
-  width: 16px;
-  height: 16px;
-  filter: brightness(0) saturate(100%) invert(63%) sepia(77%) saturate(470%) hue-rotate(98deg) brightness(98%) contrast(91%);
-}
-
-.mural-whatsapp-btn:hover {
-  opacity: 0.8;
-}
-
-.mural-whatsapp-btn:active {
-  opacity: 0.6;
-  transform: scale(0.97);
+  align-items: baseline;
+  gap: 12px;
 }
 
 .mural-title {
   margin: 0;
   padding: 0;
   color: #f1f1ed;
-  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  font-size: clamp(1.8rem, 5vw, 2.3rem);
   font-weight: 200;
   letter-spacing: -0.04em;
   line-height: 1.05;
@@ -65,621 +43,752 @@
   font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
 }
 
+.mural-header__count {
+  color: rgba(255, 255, 255, 0.45);
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 300;
+  text-transform: lowercase;
+  letter-spacing: 0.3px;
+}
+
+/* Feed com Carrossel Horizontal */
 .mural-feed {
   flex: 1;
-  overflow-y: hidden;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 18px 20px;
   overflow-x: auto;
+  overflow-y: hidden;
   overscroll-behavior-x: contain;
-  overscroll-behavior-y: auto;
-  padding: 20px 16px;
-  
-  /* Esconder barra de rolagem (scrollbar) usando pseudo-elementos webkit */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-.mural-stories {
-  display: flex;
-  gap: 20px;
-  min-width: max-content;
-  padding: 4px 2px;
-}
-
-.mural-story {
-  position: relative;
-  display: flex;
-  width: clamp(150px, 24vw, 220px);
-  flex: 0 0 auto;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.mural-story__image-wrap {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1;
-  overflow: hidden;
-  background: #222;
-}
-
-.mural-story__image-button {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-}
-
-.mural-story__image {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.mural-story__image-button:focus-visible {
-  outline: 2px solid var(--accent-color, #F06000);
-  outline-offset: 3px;
-}
-
-.mural-story__caption {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: block;
-  overflow: hidden;
-  padding: 10px 12px;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.78);
-  font-size: 0.85rem;
-  font-weight: 400;
-  line-height: 1.2;
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.mural-story__info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.mural-story__avatar {
-  width: 36px;
-  height: 36px;
-  flex: 0 0 auto;
-  object-fit: cover;
-}
-
-.mural-story__name,
-.mural-story__time {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.mural-story__name {
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 300;
-  text-transform: lowercase;
-}
-
-.mural-story__time {
-  margin-top: 2px;
-  color: #aaa;
-  font-size: 0.72rem;
-  font-weight: 300;
-  text-transform: lowercase;
-}
-
-.mural-empty {
-  display: flex;
-  min-height: 180px;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  color: #aaa;
-  font-size: 1rem;
-  font-weight: 300;
-  text-transform: lowercase;
-}
-
-.mural-empty__mark {
-  color: var(--accent-color, #F06000);
-  font-size: 2rem;
-  font-weight: 200;
-}
-
-.mural-story-modal {
-  position: fixed;
-  z-index: 200;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: rgba(0, 0, 0, 0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.mural-story-modal__content {
-  position: relative;
-  display: flex;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-}
-
-.mural-story-modal__image {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.mural-story-modal__close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  z-index: 1;
-  display: flex;
-  width: 36px;
-  height: 36px;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 2px solid #fff;
-  box-sizing: border-box;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.75);
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 2rem;
-  font-weight: 300;
-  line-height: 1;
-}
-
-.mural-story-modal__close svg {
-  display: block;
-  width: 24px;
-  height: 24px;
-  fill: #fff;
-}
-
-.mural-story-modal__close:hover {
-  background: #fff;
-}
-
-.mural-story-modal__close:hover svg {
-  fill: #000;
-}
-
-.mural-story-modal__caption {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  margin: 0;
-  padding: 12px 16px;
-  border-left: 4px solid var(--accent-color, #F06000);
-  color: #fff;
-  background: rgba(0, 0, 0, 0.8);
-  font-size: 1rem;
-}
-
-.mural-story-modal__actions {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  display: flex;
-  gap: 8px;
-  z-index: 2;
-}
-
-.mural-story-modal__action {
-  box-sizing: border-box;
-  min-height: 36px;
-  padding: 8px 12px;
-  border: 2px solid #fff;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.75);
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 0.8rem;
-  text-transform: lowercase;
-}
-
-.mural-story-modal__action:hover {
-  color: #000;
-  background: #fff;
-}
-
-.mural-story-modal__action--danger {
-  border-color: #ff4d4d;
-  color: #ffb3b3;
-}
-
-.mural-story-modal__action--danger:hover {
-  color: #fff;
-  background: #e51400;
-}
-
-.mural-story-modal__edit-area {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  background: rgba(0, 0, 0, 0.92);
-}
-
-.mural-story-modal__edit-area input {
-  width: 100%;
-  box-sizing: border-box;
-  min-height: 42px;
-  padding: 9px 12px;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  color: #fff;
-  background: #111;
-  font-family: inherit;
-  font-size: 1rem;
-}
-
-.mural-story-modal__edit-area input:focus {
-  border-color: var(--accent-color, #F06000);
-  outline: none;
-}
-
-.mural-story-modal__edit-area .mural-edit-actions {
-  gap: 10px;
-}
-
-.mural-story-modal__edit-area .mural-edit-actions button {
-  min-height: 36px;
-  padding: 8px 14px;
-  border: 2px solid rgba(255, 255, 255, 0.7);
-  box-sizing: border-box;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .mural-feed::-webkit-scrollbar {
   display: none;
 }
 
-.mural-message {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
+/* Card de Story (9:16 Vertical) - Totalmente sem bordas */
+.mural-story-card {
+  position: relative;
+  width: clamp(138px, 26vw, 175px);
+  aspect-ratio: 9 / 16;
+  flex: 0 0 auto;
+  overflow: hidden;
+  border-radius: 0;
+  background-color: #121212;
+  border: none;
+  transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
-.mural-photo {
-  width: 48px;
-  height: 48px;
+.mural-story-card:hover {
+  opacity: 0.95;
+}
+
+/* Toque estilo Metro Tilt */
+.mural-story-card:active {
+  transform: scale(0.97);
+}
+
+.mural-story-card__button {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  text-align: left;
+}
+
+.mural-story-card__button:focus-visible {
+  outline: 2px solid var(--accent-color, #F06000);
+  outline-offset: -2px;
+}
+
+.mural-story-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Bloco de Autor estilo MuralDisplay (Frosted Glass sem degradê) */
+.mural-story-card__author {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  pointer-events: none;
+}
+
+.mural-story-card__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 0;
   object-fit: cover;
   flex-shrink: 0;
-  border-radius: 0;
+  border: none;
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mural-story-card__identity {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.mural-story-card__name {
+  color: #ffffff;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  text-transform: lowercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+
+.mural-story-card__time {
+  color: #a6a6a6;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-top: 3px;
+}
+
+/* ============================================================
+   TILE DE AÇÃO: "+ postar story" (Primeiro card do carrossel)
+   ============================================================ */
+.mural-story-card--action {
+  border: none;
+  background: rgba(240, 96, 0, 0.12);
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.mural-story-card--action:hover {
+  background: rgba(240, 96, 0, 0.22);
+}
+
+.mural-story-add-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.mural-story-add-card__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  padding: 16px 8px;
+}
+
+.mural-story-add-card__icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-color, #F06000);
+  border: none;
+  background: transparent;
+  transition: transform 0.2s ease;
+}
+
+.mural-story-card--action:hover .mural-story-add-card__icon {
+  transform: scale(1.15);
+}
+
+.mural-story-add-card__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.mural-story-add-card__primary {
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  text-transform: lowercase;
+  color: #ffffff;
+}
+
+.mural-story-add-card__secondary {
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  text-transform: lowercase;
+  color: var(--accent-color, #F06000);
   margin-top: 2px;
 }
 
-.mural-content {
-  flex: 1;
+/* ============================================================
+   MODAL 1: PRÉVIA RÁPIDA (COM BOTÃO PUBLICAR)
+   ============================================================ */
+.mural-preview-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-.mural-meta {
+.mural-preview-modal__content {
+  width: min(100%, 360px);
+  background: #0d0d0d;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+}
+
+.mural-preview-modal__header {
+  margin-bottom: 14px;
+}
+
+.mural-preview-modal__title {
+  margin: 0;
+  color: #fff;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 1.4rem;
+  font-weight: 200;
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
+}
+
+.mural-preview-modal__image-wrapper {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  max-height: min(54vh, 440px);
+  overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mural-preview-modal__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mural-preview-modal__error {
+  color: #ff8585;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 0.85rem;
+  margin: 10px 0 0;
+}
+
+.mural-preview-modal__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.mural-preview-btn {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 16px;
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 1rem;
+  text-transform: lowercase;
+  cursor: pointer;
+  border-radius: 0;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.mural-preview-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.mural-preview-btn--primary {
+  background: var(--accent-color, #F06000);
+  color: #ffffff;
+  border: none;
+  font-weight: 400;
+}
+
+.mural-preview-btn--primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.mural-preview-btn--cancel {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  font-weight: 300;
+}
+
+.mural-preview-btn--cancel:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.mural-preview-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Animação de Progresso Metro */
+.mural-preview-modal__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 0 10px;
+}
+
+.mural-preview-modal__loading-text {
+  color: rgba(255, 255, 255, 0.7);
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  text-transform: lowercase;
+}
+
+.metro-progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 24px;
+}
+
+.metro-progress-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--accent-color, #F06000);
+  border-radius: 0;
+  animation: metroDotPulse 1.2s infinite ease-in-out;
+}
+
+.metro-progress-dot:nth-child(1) { animation-delay: 0s; }
+.metro-progress-dot:nth-child(2) { animation-delay: 0.15s; }
+.metro-progress-dot:nth-child(3) { animation-delay: 0.3s; }
+.metro-progress-dot:nth-child(4) { animation-delay: 0.45s; }
+.metro-progress-dot:nth-child(5) { animation-delay: 0.6s; }
+
+@keyframes metroDotPulse {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.35);
+  }
+}
+
+/* ============================================================
+   MODAL 2: STORY VIEWER FULLSCREEN (ESTILO STORIES / INSTAGRAM)
+   ============================================================ */
+.mural-story-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 350;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(8px, 2vw, 24px);
+  background: rgba(0, 0, 0, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: storyBackdropFade 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.mural-story-modal__wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 420px);
+  height: min(92svh, 760px);
+  aspect-ratio: 9 / 16;
+  background: #000;
+  border: none;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+  animation: storyModalZoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: center center;
+}
+
+/* Fundo Fixo com Lente Permanente de Blur */
+.mural-story-modal__backdrop {
+  position: absolute;
+  inset: -24px;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #000;
+}
+
+.mural-story-modal__backdrop-source {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: translate3d(0, 0, 0) scale(1.1);
+  will-change: opacity;
+}
+
+.mural-story-modal__backdrop-source--prev {
+  opacity: 1;
+  z-index: 1;
+}
+
+.mural-story-modal__backdrop-source--curr {
+  z-index: 2;
+  animation: backdropSourceFade 0.28s ease-out both;
+}
+
+/* Lente de Vidro Fosco Permanente que SEMPRE fica ativa e renderizada */
+.mural-story-modal__backdrop-lens {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(34px);
+  -webkit-backdrop-filter: blur(34px);
+  pointer-events: none;
+}
+
+@keyframes backdropSourceFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   FAIXA SUPERIOR UNIFICADA DO STORY (ESTILO METRO APP BAR COM VIDRO FOSCO)
+   ============================================================ */
+.mural-story-modal__top-bar {
+  position: relative;
+  width: 100%;
+  flex-shrink: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px 10px 12px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  opacity: 1;
+  transition: opacity 0.4s ease-out;
+  box-sizing: border-box;
+}
+
+/* Fundo da faixa superior com cópia da imagem e lente de vidro fosco */
+.mural-story-modal__top-bar-bg {
+  position: absolute;
+  inset: -16px;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #000;
+}
+
+.mural-story-modal__top-bar-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transform: translate3d(0, 0, 0) scale(1.15);
+  filter: blur(14px);
+  -webkit-filter: blur(14px);
+  will-change: transform;
+}
+
+.mural-story-modal__top-bar-bg-lens {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.48);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Quando segurado por mais de 3s, oculta a faixa superior inteira com fadeout suave */
+.mural-story-modal__wrapper.is-ui-hidden .mural-story-modal__top-bar {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Linhas contadoras de progresso integradas no topo da faixa */
+.mural-story-modal__progress-bar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 4px;
+  width: 100%;
+  pointer-events: none;
+}
+
+.mural-story-modal__progress-segment {
+  height: 2.5px;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.25);
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.mural-story-modal__progress-fill {
+  height: 100%;
+  background: var(--accent-color, #F06000);
+}
+
+/* Linha única contendo Foto, Nome, Tempo e Botões de Ação */
+.mural-story-modal__header-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mural-story-modal__author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.mural-story-modal__avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 0;
+  object-fit: cover;
+  border: none;
+  flex-shrink: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mural-story-modal__identity {
   display: flex;
   align-items: baseline;
   gap: 8px;
-}
-
-.mural-name {
-  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
-  font-weight: 300;
-  font-size: 1.3rem;
-  color: #fff;
-  text-transform: lowercase;
-  margin: 0;
-}
-
-.mural-time {
-  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
-  font-size: 0.8rem;
-  color: #aaaaaa;
-  font-weight: 300;
-}
-
-.mural-text {
-  margin: 0;
-  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
-  font-size: 1.1rem;
-  color: #dddddd;
-  font-weight: 300;
-  line-height: 1.4;
-  word-break: break-word;
-}
-
-.mural-message-image {
-  display: block;
-  width: min(100%, 22rem);
-  max-height: 22rem;
-  object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.mural-input-area {
-  display: flex;
-  align-items: center;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.5);
-  border-top: 2px solid rgba(255, 255, 255, 0.1);
-  gap: 8px;
-}
-
-.mural-input-area--empty {
-  display: block;
-}
-
-.mural-story-picker {
-  box-sizing: border-box;
-  display: flex;
-  height: 44px;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #fff;
-  background: transparent;
-  cursor: pointer;
-  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
-  font-size: 1rem;
-  font-weight: 300;
-  letter-spacing: 0.2px;
-  transition: opacity 0.2s ease, transform 0.1s ease;
-}
-
-.mural-story-picker:hover {
-  opacity: 1;
-}
-
-.mural-story-picker:active {
-  transform: scale(0.99);
-}
-
-.mural-story-picker svg {
-  display: block;
-  width: 28px;
-  height: 28px;
-  fill: currentColor;
-}
-
-.mural-story-picker .mural-image-error {
-  color: #ffb3b3;
-  font-size: 0.8rem;
-}
-
-.mural-compose-fields {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  gap: 8px;
   min-width: 0;
 }
 
-.mural-image-preview {
-  box-sizing: border-box;
-  width: 44px;
-  height: 44px;
-  flex: 0 0 auto;
-  object-fit: cover;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-.mural-image-picker {
-  box-sizing: border-box;
-  display: flex;
-  width: 44px;
-  height: 44px;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+.mural-story-modal__name {
   color: #fff;
-  background: transparent;
-  cursor: pointer;
-  font-size: 1.5rem;
-  line-height: 1;
-  transition: opacity 0.2s ease, transform 0.1s ease;
-}
-
-.mural-image-picker:hover:not(:disabled) {
-  opacity: 1;
-  transform: scale(1.05);
-}
-
-.mural-image-picker:active:not(:disabled) {
-  transform: scale(0.95);
-}
-
-.mural-image-picker:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.mural-image-picker svg {
-  display: block;
-  width: 28px;
-  height: 28px;
-  fill: currentColor;
-}
-
-.mural-image-picker input,
-.mural-story-picker input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.mural-caption-input {
-  box-sizing: border-box;
-  min-width: 0;
-  height: 44px;
-  flex: 1;
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid transparent;
-  color: #fff;
-  padding: 12px 14px;
   font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
   font-size: 1.15rem;
   font-weight: 300;
-  outline: none;
-  transition: all 0.2s ease;
-  border-radius: 0;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-transform: lowercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.mural-caption-input:focus {
-  border-color: var(--accent-color, #F06000);
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.mural-caption-input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.mural-input-area button {
-  box-sizing: border-box;
-  width: 44px;
-  height: 44px;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  padding: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.8;
-  transition: opacity 0.2s, transform 0.1s;
-}
-
-.mural-input-area button:hover:not(:disabled) {
-  opacity: 1;
-  transform: scale(1.05);
-}
-
-.mural-input-area button:active:not(:disabled) {
-  transform: scale(0.95);
-}
-
-.mural-input-area button:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.mural-input-area button img {
-  width: 28px;
-  height: 28px;
-  filter: invert(1);
-}
-
-.mural-actions {
-  display: flex;
-  gap: 4px;
-  margin-left: auto;
-}
-
-.mural-action-btn {
-  background: transparent;
-  border: none;
-  padding: 2px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.5;
-  transition: opacity 0.2s, transform 0.1s;
-}
-
-.mural-action-btn:hover {
-  opacity: 1;
-  transform: scale(1.1);
-}
-
-.mural-action-btn img {
-  width: 22px;
-  height: 22px;
-  filter: invert(1);
-}
-
-.mural-edit-area {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.mural-edit-area input {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
-  padding: 6px 10px;
-  font-family: inherit;
-  font-size: 0.95rem;
-  outline: none;
-  border-radius: 0;
-  transition: border-color 0.2s;
-}
-
-.mural-edit-area input:focus {
-  border-color: var(--accent-color, #F06000);
-}
-
-.mural-edit-actions {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-}
-
-.mural-edit-actions button {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
-  padding: 4px 12px;
+.mural-story-modal__time {
+  color: rgba(255, 255, 255, 0.6);
+  font-family: "Segoe UI", "Segoe WP", system-ui, sans-serif;
   font-size: 0.8rem;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all 0.2s;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: lowercase;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.mural-edit-actions button:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #fff;
+.mural-story-modal__controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.mural-story-modal__delete-btn {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(229, 20, 0, 0.85);
+  border: none;
+  border-radius: 0;
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  opacity: 0.9;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.mural-story-modal__delete-btn:hover {
+  background: #e51400;
+  opacity: 1;
+}
+
+.mural-story-modal__delete-btn svg {
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+  display: block;
+}
+
+.mural-story-modal__close-btn {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  border-radius: 0;
+  color: #fff;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  opacity: 0.85;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.mural-story-modal__close-btn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* Área de Mídia (inicia abaixo do cabeçalho para foto 100% visível) */
+.mural-story-modal__media-container {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.mural-story-modal__media {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  will-change: transform, opacity;
+}
+
+/* Próxima foto: entra da direita para a esquerda */
+.mural-story-modal__media--next {
+  animation: muralStorySlideNext 380ms cubic-bezier(0.12, 0.9, 0.2, 1) both;
+}
+
+/* Foto anterior: entra da esquerda para a direita */
+.mural-story-modal__media--prev {
+  animation: muralStorySlidePrev 380ms cubic-bezier(0.12, 0.9, 0.2, 1) both;
+}
+
+/* Áreas de Toque Invisíveis (Estilo Instagram) */
+.mural-story-modal__tap-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  touch-action: none;
+  z-index: 5;
+}
+
+.mural-story-modal__tap-zone--left {
+  left: 0;
+}
+
+.mural-story-modal__tap-zone--right {
+  right: 0;
+}
+
+/* ============================================================
+   KEYFRAMES DAS ANIMAÇÕES DO STORY VIEWER
+   ============================================================ */
+@keyframes storyBackdropFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes storyModalZoomIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.86) translate3d(0, 24px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+@keyframes muralStorySlideNext {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes muralStorySlidePrev {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
