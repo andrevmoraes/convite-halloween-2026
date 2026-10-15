@@ -111,14 +111,6 @@ function RegrasModal({ onClose }) {
         aria-modal="true"
         aria-labelledby="regras-modal-title"
       >
-        <button
-          className="regras-modal__close"
-          type="button"
-          onClick={onClose}
-          aria-label="Fechar regras da festa"
-        >
-          ×
-        </button>
         <p className="regras-modal__eyebrow">antes de começar</p>
         <h2 id="regras-modal-title">informações</h2>
         <div className="regras-modal__content">
